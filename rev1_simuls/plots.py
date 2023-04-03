@@ -13,16 +13,23 @@ from rev1_simuls.utils import results_dir
 
 
 def _discard_outliers(
-    betas: np.ndarray,  # simulation estimates
-    method: str,  # name of estimator
-    nstd: float = 4.0,  # number of standard deviations allowed
+    betas: np.ndarray,  #
+    method: str,
+    nstd: float = 4.0,
 ) -> np.ndarray:
-    """discards simulation outliers"""
+    """discards simulation outliers
+
+    Args:
+        betas: the simulation estimates
+        method: the  name of the estimator
+        nstd: the number of standard deviations allowed
+
+    Returns:
+        a boolean array with True if the observation is an outlier
+    """
     n_sim = betas.shape[0]
     m, s = np.mean(betas, 0), np.std(betas, 0)
-    outliers = np.any(
-        abs(betas - m) > nstd * s, 1
-    )  # True if simulation has an outlier
+    outliers = np.any(abs(betas - m) > nstd * s, 1)  # True if simulation has an outlier
     n_outliers = np.sum(outliers)
     print(
         f"""
@@ -34,14 +41,24 @@ def _discard_outliers(
 
 
 def _dataframe_results(
-    full_model_name: str,  #  the model we simulate
-    base_names: List[str],  #  the names of the bases
-    estims: List[np.ndarray],  #  the simulation results
-    do_simuls_mde: bool = True,  #  whether we simulate MDE
-    do_simuls_poisson: bool = True,  #  whether we simulate Poisson
-) -> None:
-    """constructs the dataframe to plot the simulation results"""
-    do_both = do_simuls_mde and do_simuls_poisson
+    full_model_name: str,
+    base_names: List[str],
+    estims: List[np.ndarray],
+    do_simuls_mde: bool = True,
+    do_simuls_poisson: bool = True,
+) -> pd.DataFrame:
+    """constructs the dataframe to plot the simulation results
+
+    Args:
+        full_model_name: the model we simulate
+        base_names:  the names of the bases
+        estims: the simulation results
+        do_simuls_mde: whether we simulate the MDE
+        do_simuls_poisson: whether we simulate Poisson
+
+    Returns:
+        the formatted dataframe
+    """
     n_kept, n_bases = estims[0].shape
     nkb = n_kept * n_bases
     n_estims = len(estims)
@@ -101,10 +118,22 @@ def plot_simulation_results(
     do_simuls_poisson: bool = True,  # do we simulate Poisson
     n_households_obs: float = None,  # the number of observed households in the Cupid dataset
 ) -> None:
-    """plots the simulation results"""
+    """plots the simulation results
+
+    Args:
+        full_model_name: the type of model we are estimating
+        n_households_sim:  the number of households in the simulation
+        n_sim:  the number of simulation runs
+        value_coeff:  the divider of the smallest positive mu
+        do_simuls_mde:  do we simulate the MDE
+        do_simuls_poisson:   do we simulate Poisson
+        n_households_obs: the number of observed households in the Cupid dataset
+
+    Returns:
+        nothing
+    """
     results_file = (
-        results_dir
-        / f"{full_model_name}_{n_households_sim}_{int(value_coeff)}.pkl"
+        results_dir / f"{full_model_name}_{n_households_sim}_{int(value_coeff)}.pkl"
     )
     with open(results_file, "rb") as f:
         results = pickle.load(f)
@@ -123,9 +152,7 @@ def plot_simulation_results(
         outliers_mask = outliers_mask | outliers_mde
     if do_simuls_poisson:
         estim_poisson = results["Poisson"]
-        outliers_poisson = _discard_outliers(
-            estim_poisson, "Poisson", nstd=4.0
-        )
+        outliers_poisson = _discard_outliers(estim_poisson, "Poisson", nstd=4.0)
         outliers_mask = outliers_mask | outliers_poisson
 
     kept = [True] * n_sim
@@ -137,12 +164,11 @@ def plot_simulation_results(
                 n_discards += 1
         print(f"We are discarding {n_discards} outlier samples")
     else:
-        print(f"We have found no outlier samples")
+        print("We have found no outlier samples")
 
     if full_model_name.startswith("choo_siow_cupid"):
         rng = np.random.default_rng(67569)
         n_kept = len(kept)
-        nkb = n_kept * n_bases
         expected = np.zeros((n_kept, n_bases))
         for i_sim in range(n_kept):
             expected[i_sim, :] = rng.multivariate_normal(

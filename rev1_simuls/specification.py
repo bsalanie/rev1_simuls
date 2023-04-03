@@ -2,19 +2,25 @@ from typing import List, Tuple
 
 import numpy as np
 
-from rev1_simuls.utils import legendre_polynomials, quantile_transform
+from rev1_simuls.utils import (legendre_polynomials, nprepeat_col,
+                               nprepeat_row, quantile_transform)
 
 
 def generate_bases(
-    nx: np.ndarray,  # the numbers of men of each type
-    my: np.ndarray,  # the numbers of women of each type
-    degrees: List[
-        Tuple[int, int]
-    ],  # the list of degrees for polynomials in `x` and `y`
-) -> Tuple[
-    np.ndarray, List[str]
-]:  # the matrix of base functions and their names
-    """generates the bases for a semilinear specification"""
+    nx: np.ndarray,
+    my: np.ndarray,
+    degrees: List[Tuple[int, int]],
+) -> Tuple[np.ndarray, List[str]]:
+    """generates the bases for a semilinear specification
+
+    Args:
+        nx: the numbers of men of each type
+        my: the numbers of women of each type
+        degrees: the list of degrees for polynomials in `x` and `y`
+
+    Returns:
+         the matrix of base functions and their names
+    """
     n_bases = 3 + len(degrees)
     n_types_men, n_types_women = nx.size, my.size
     types_men, types_women = np.arange(n_types_men), np.arange(n_types_women)
@@ -47,10 +53,18 @@ def generate_bases(
 
 
 def _generate_bases_firstsub(
-    n_types_men: int,  # number of types of men
-    n_types_women: int,  # number of types of women
+    n_types_men: int,
+    n_types_women: int,
 ) -> Tuple[np.ndarray, List[str]]:
-    """generate the bases used in the first submission"""
+    """generate the bases used in the first submission
+
+    Args:
+        n_types_men: the number of types of men
+        n_types_women: the number of types of women
+
+    Returns:
+        the matrix of base functions and their names
+    """
     n_bases = 8
     base_functions = np.zeros((n_types_men, n_types_women, n_bases))
     base_functions[:, :, 0] = 1.0

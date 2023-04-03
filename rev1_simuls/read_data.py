@@ -2,11 +2,7 @@ from pathlib import Path
 from typing import Optional, Tuple
 
 import numpy as np
-from cupid_matching.matching_utils import (
-    Matching,
-    _compute_margins,
-    _get_singles,
-)
+from cupid_matching.matching_utils import Matching, _compute_margins
 
 
 def ages_slice(
@@ -59,7 +55,6 @@ def varmus_select_ages(
                 nages2 + ox, (nages2 + nages + age0) : (nages2 + nages + age1)
             ]
         for y in range(nb_ages):
-            oy = y + age0
             vmus[nb_ages2 + nb_ages + y, (nb_ages2 + nb_ages) :] = varmus[
                 nages2 + nages + ox,
                 (nages2 + nages + age0) : (nages2 + nages + age1),
@@ -104,14 +99,20 @@ def read_marriages(
 
 
 def reshape_varcov(
-    varmus: np.ndarray,  #  muxy row major, then  mux0, then mu0y packed in both dimensions
-    mus: Matching,  #  the original Matching
-    n_households: float,  #  the number of households we want
-) -> tuple[
-    np.ndarray
-]:  #  the 6 constituent blocks of the normalized variance-covariance
+    varmus: np.ndarray,
+    mus: Matching,
+    n_households: float,
+) -> tuple[np.ndarray]:
     """splits the variance-covariance matrix
     and renormalizes for a requested total number of households
+
+    Args:
+        varmus:  muxy row major, then  mux0, then mu0y packed in both dimensions
+        mus: the original Matching
+        n_households:  the number of households we want
+
+    Returns:
+         the 6 constituent blocks of the normalized variance-covariance
     """
     muxy, mux0, mu0y, *_ = mus.unpack()
     ncat_men, ncat_women = muxy.shape
@@ -164,9 +165,7 @@ def rescale_mus(
     return mus_norm
 
 
-def _get_zeros_mu(
-    mu: np.ndarray, eps: float = 1e-9
-) -> Tuple[bool, np.ndarray, float]:
+def _get_zeros_mu(mu: np.ndarray, eps: float = 1e-9) -> Tuple[bool, np.ndarray, float]:
     mu_size = mu.size
     nonzero_mu = mu[mu > eps]
     min_nonzero = np.min(nonzero_mu)
@@ -207,8 +206,6 @@ def remove_zero_cells(
         muxy_fixed *= scale_factor
         mux0_fixed *= scale_factor
         mux0_fixed *= scale_factor
-        nx_fixed, my_fixed = _compute_margins(
-            muxy_fixed, mux0_fixed, mu0y_fixed
-        )
+        nx_fixed, my_fixed = _compute_margins(muxy_fixed, mux0_fixed, mu0y_fixed)
         mus_fixed = Matching(muxy_fixed, nx_fixed, my_fixed)
         return mus_fixed
