@@ -1,26 +1,36 @@
 [tool.poetry]
 name = "rev1-simuls"
 version = "0.1.0"
-description = ""
+description = "code for simulations in revision of JAppE GalichonSalanie"
 authors = ["Bernard Salanie <bs2237@columbia.edu>"]
 readme = "README.md"
 packages = [{include = "rev1_simuls"}]
+repository = "https://github.com/bsalanie/rev1_simuls.git"
+documentation = "https://bsalanie.github.io/rev1_simuls"
 
 [tool.poetry.dependencies]
 python = "^3.11"
 pandas = "^1.5.3"
 numpy = "^1.24.2"
 cupid-matching = "^1.0.4"
+matplotlib = "^3.7.1"
+seaborn = "^0.12.2"
 
 
 [tool.poetry.group.dev.dependencies]
-matplotlib = "^3.7.1"
-seaborn = "^0.12.2"
-black = "^23.3.0"
-isort = "^5.12.0"
-flake8 = "^6.0.0"
-pytest = "^7.2.2"
-mypy = "^1.1.1"
+pip = "^23.0"
+wheel = "^0.35"
+black = "*"
+flake8 = "*"
+pytest = "^7.0"
+mypy = "^1.0"
+mkdocs = "*"
+mkdocs-material = "*"
+mkdocstrings = "*"
+mkdocstrings-python = "^0.8"
+markdown = "*"
+pymdown-extensions = "*"
+pre-commit = "*"
 
 [build-system]
 requires = ["poetry-core"]
