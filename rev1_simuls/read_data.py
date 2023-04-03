@@ -165,7 +165,9 @@ def rescale_mus(
     return mus_norm
 
 
-def _get_zeros_mu(mu: np.ndarray, eps: float = 1e-9) -> Tuple[bool, np.ndarray, float]:
+def _get_zeros_mu(
+    mu: np.ndarray, eps: float = 1e-9
+) -> Tuple[bool, np.ndarray, float]:
     mu_size = mu.size
     nonzero_mu = mu[mu > eps]
     min_nonzero = np.min(nonzero_mu)
@@ -206,6 +208,8 @@ def remove_zero_cells(
         muxy_fixed *= scale_factor
         mux0_fixed *= scale_factor
         mux0_fixed *= scale_factor
-        nx_fixed, my_fixed = _compute_margins(muxy_fixed, mux0_fixed, mu0y_fixed)
+        nx_fixed, my_fixed = _compute_margins(
+            muxy_fixed, mux0_fixed, mu0y_fixed
+        )
         mus_fixed = Matching(muxy_fixed, nx_fixed, my_fixed)
         return mus_fixed

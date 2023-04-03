@@ -2,8 +2,12 @@ from typing import List, Tuple
 
 import numpy as np
 
-from rev1_simuls.utils import (legendre_polynomials, nprepeat_col,
-                               nprepeat_row, quantile_transform)
+from rev1_simuls.utils import (
+    legendre_polynomials,
+    nprepeat_col,
+    nprepeat_row,
+    quantile_transform,
+)
 
 
 def generate_bases(

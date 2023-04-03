@@ -29,7 +29,9 @@ def _discard_outliers(
     """
     n_sim = betas.shape[0]
     m, s = np.mean(betas, 0), np.std(betas, 0)
-    outliers = np.any(abs(betas - m) > nstd * s, 1)  # True if simulation has an outlier
+    outliers = np.any(
+        abs(betas - m) > nstd * s, 1
+    )  # True if simulation has an outlier
     n_outliers = np.sum(outliers)
     print(
         f"""
@@ -133,7 +135,8 @@ def plot_simulation_results(
         nothing
     """
     results_file = (
-        results_dir / f"{full_model_name}_{n_households_sim}_{int(value_coeff)}.pkl"
+        results_dir
+        / f"{full_model_name}_{n_households_sim}_{int(value_coeff)}.pkl"
     )
     with open(results_file, "rb") as f:
         results = pickle.load(f)
@@ -152,7 +155,9 @@ def plot_simulation_results(
         outliers_mask = outliers_mask | outliers_mde
     if do_simuls_poisson:
         estim_poisson = results["Poisson"]
-        outliers_poisson = _discard_outliers(estim_poisson, "Poisson", nstd=4.0)
+        outliers_poisson = _discard_outliers(
+            estim_poisson, "Poisson", nstd=4.0
+        )
         outliers_mask = outliers_mask | outliers_poisson
 
     kept = [True] * n_sim

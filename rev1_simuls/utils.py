@@ -67,7 +67,9 @@ def legendre_polynomials(
     p[:, 0] = np.ones_like(x)
     p[:, 1] = x_transf
     for deg in range(2, max_deg + 1):
-        p2 = (2 * deg - 1) * (p[:, deg - 1] * x_transf) - (deg - 1) * p[:, deg - 2]
+        p2 = (2 * deg - 1) * (p[:, deg - 1] * x_transf) - (deg - 1) * p[
+            :, deg - 2
+        ]
         p[:, deg] = p2 / deg
     polys_p = p[:, 1:] if no_constant else p
     return polys_p

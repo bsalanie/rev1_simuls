@@ -4,8 +4,10 @@ from multiprocessing.pool import ThreadPool as Pool
 from typing import Tuple
 
 import numpy as np
-from cupid_matching.choo_siow import (entropy_choo_siow,
-                                      entropy_choo_siow_corrected)
+from cupid_matching.choo_siow import (
+    entropy_choo_siow,
+    entropy_choo_siow_corrected,
+)
 from cupid_matching.entropy import EntropyFunctions
 from cupid_matching.matching_utils import Matching, _get_singles
 from cupid_matching.min_distance import MDEResults, estimate_semilinear_mde
@@ -13,9 +15,13 @@ from cupid_matching.model_classes import ChooSiowPrimitives
 from cupid_matching.poisson_glm import PoissonGLMResults, choo_siow_poisson_glm
 
 from rev1_simuls.plots import plot_simulation_results
-from rev1_simuls.read_data import (read_margins, read_marriages,
-                                   remove_zero_cells, rescale_mus,
-                                   reshape_varcov)
+from rev1_simuls.read_data import (
+    read_margins,
+    read_marriages,
+    remove_zero_cells,
+    rescale_mus,
+    reshape_varcov,
+)
 from rev1_simuls.specification import _generate_bases_firstsub, generate_bases
 from rev1_simuls.utils import data_dir, results_dir
 
@@ -34,7 +40,9 @@ model_name = "choo_siow_cupid"
 use_rescale = False  # rescale the sample
 use_mde_correction = False  # use the `corrected` version of MDE
 
-n_households_cupid_pop = 13_274_041  # number of households in the Cupid population
+n_households_cupid_pop = (
+    13_274_041  # number of households in the Cupid population
+)
 n_households_cupid_obs = 75_265  # number of households in the Cupid sample
 
 age_start, age_end = 16, 40  # we select ages
@@ -49,12 +57,16 @@ value_coeff = 1  # we set the zeros at the smallest positive value
 # divided by value_coeff,
 # except if value_coeff is 0
 
-shrink_factor = 1  # we shrink the Choo-Siow estimates by a multiplicative integer
+shrink_factor = (
+    1  # we shrink the Choo-Siow estimates by a multiplicative integer
+)
 
 
 if model_name == "choo_siow_cupid":
     nx, my = read_margins(data_dir, age_start=age_start, age_end=age_end)
-    muxy, varmus = read_marriages(data_dir, age_start=age_start, age_end=age_end)
+    muxy, varmus = read_marriages(
+        data_dir, age_start=age_start, age_end=age_end
+    )
     n_types_men, n_types_women = muxy.shape
     mux0, mu0y = _get_singles(muxy, nx, my)
     print(
@@ -69,7 +81,9 @@ if model_name == "choo_siow_cupid":
     qmus = np.quantile(muxy, np.arange(1, 100) / 100.0)
     mus_norm = rescale_mus(mus, n_households_cupid_obs) if use_rescale else mus
     varmus_norm = (
-        reshape_varcov(varmus, mus, n_households_cupid_obs) if use_rescale else varmus
+        reshape_varcov(varmus, mus, n_households_cupid_obs)
+        if use_rescale
+        else varmus
     )
 
 if model_name == "choo_siow_cupid":
@@ -87,7 +101,9 @@ if model_name == "choo_siow_cupid":
 
 if model_name == "choo_siow_cupid":
     degrees = [(1, 0), (0, 1), (2, 0), (1, 1), (0, 2)]
-    base_functions, base_names = generate_bases(nx_norm_fixed, my_norm_fixed, degrees)
+    base_functions, base_names = generate_bases(
+        nx_norm_fixed, my_norm_fixed, degrees
+    )
     n_bases = base_functions.shape[-1]
     print(f"We created {n_bases} bases:")
     print(f"{base_names}")
@@ -171,7 +187,9 @@ elif do_simuls_poisson:
 if (
     model_name == "choo_siow_cupid"
 ):  # we use the Phi and the margins we got from the Cupid dataset
-    choo_siow_estim = ChooSiowPrimitives(estim_Phi, nx_norm_fixed, my_norm_fixed)
+    choo_siow_estim = ChooSiowPrimitives(
+        estim_Phi, nx_norm_fixed, my_norm_fixed
+    )
 elif model_name.startswith(
     "choo_siow_firstsub"
 ):  # we regenerate the simulation in the first submitted version
@@ -180,11 +198,17 @@ elif model_name.startswith(
     if model_name == "choo_siow_firstsub10":
         theta1 *= 10
     n_bases = theta1.size
-    base_functions, base_names = _generate_bases_firstsub(n_types_men, n_types_women)
+    base_functions, base_names = _generate_bases_firstsub(
+        n_types_men, n_types_women
+    )
     Phi1 = base_functions @ theta1
     t = 0.2
-    nx1 = np.logspace(start=0, base=1 - t, stop=n_types_men - 1, num=n_types_men)
-    my1 = np.logspace(start=0, base=1 - t, stop=n_types_women - 1, num=n_types_women)
+    nx1 = np.logspace(
+        start=0, base=1 - t, stop=n_types_men - 1, num=n_types_men
+    )
+    my1 = np.logspace(
+        start=0, base=1 - t, stop=n_types_women - 1, num=n_types_women
+    )
     choo_siow_estim = ChooSiowPrimitives(Phi1, nx1, my1)
     estim_coeffs = theta1
 
@@ -210,7 +234,9 @@ def _run_simul(
     if do_simuls_mde:
         if verbose == 2:
             print(f"    Doing MDE {i_sim}")
-        mde_results_sim = estimate_semilinear_mde(mus_sim_non0, base_functions, entropy)
+        mde_results_sim = estimate_semilinear_mde(
+            mus_sim_non0, base_functions, entropy
+        )
         estim_coeffs_mde = mde_results_sim.estimated_coefficients
         if verbose == 2:
             print(f"    Done MDE {i_sim}")
@@ -240,7 +266,9 @@ rng = np.random.default_rng(130962)
 seeds = rng.integers(100_000, size=n_sim)
 verbose = 0
 
-entropy = entropy_choo_siow_corrected if use_mde_correction else entropy_choo_siow
+entropy = (
+    entropy_choo_siow_corrected if use_mde_correction else entropy_choo_siow
+)
 
 # run simulation
 list_args = [
@@ -302,7 +330,8 @@ if model_name == "choo_siow_cupid":
 
 # and save them
 with open(
-    results_dir / f"{full_model_name}_{n_households_sim}_{int(value_coeff)}.pkl",
+    results_dir
+    / f"{full_model_name}_{n_households_sim}_{int(value_coeff)}.pkl",
     "wb",
 ) as f:
     pickle.dump(simul_results, f)
