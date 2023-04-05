@@ -1,4 +1,4 @@
-""" simulate the model """
+""" runs one simulation of the estimates """
 from typing import Tuple
 import numpy as np
 

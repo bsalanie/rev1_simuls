@@ -8,8 +8,7 @@ from cupid_matching.choo_siow import (
     entropy_choo_siow,
     entropy_choo_siow_corrected,
 )
-from cupid_matching.entropy import EntropyFunctions
-from cupid_matching.matching_utils import Matching, _get_singles
+from cupid_matching.matching_utils import Matching
 from cupid_matching.min_distance import MDEResults, estimate_semilinear_mde
 from cupid_matching.model_classes import ChooSiowPrimitives
 from cupid_matching.poisson_glm import PoissonGLMResults, choo_siow_poisson_glm
@@ -30,7 +29,7 @@ from rev1_simuls.config import (
     age_end,
     do_simuls_mde,
     do_simuls_poisson,
-    n_households_cupid_obs,
+    n_households_cupid_popu,
     use_rescale,
     n_sim,
     zero_guard,
@@ -57,9 +56,11 @@ def prepare_data_cupid():
     )
     mus = Matching(muxy, nx, my)
     qmus = np.quantile(muxy, np.arange(1, 100) / 100.0)
-    mus_norm = rescale_mus(mus, n_households_cupid_obs) if use_rescale else mus
+    mus_norm = (
+        rescale_mus(mus, n_households_cupid_popu) if use_rescale else mus
+    )
     varmus_norm = (
-        reshape_varcov(varmus, mus, n_households_cupid_obs)
+        reshape_varcov(varmus, mus, n_households_cupid_popu)
         if use_rescale
         else varmus
     )
@@ -72,8 +73,20 @@ def prepare_data_cupid():
     return mus_norm_fixed, varmus_norm
 
 
-def make_bases(nx_obs, my_obs, degrees) -> Tuple[np.ndarray, List[str]]:
-    base_functions, base_names = generate_bases(nx_obs, my_obs, degrees)
+def make_bases(
+    nx: np.ndarray, my: np.ndarray, degrees: List[Tuple[int, int]]
+) -> Tuple[np.ndarray, List[str]]:
+    """create base functions
+
+    Args:
+        nx: numbers of men of each type
+        my: numbers of women of each type
+        degrees: degrees of the bivariate polynomials
+
+    Returns:
+        the values of the base functions and their names
+    """
+    base_functions, base_names = generate_bases(nx, my, degrees)
     n_bases = base_functions.shape[-1]
     print(f"We created {n_bases} bases:")
     for i_base, base_name in enumerate(base_names):
@@ -81,7 +94,20 @@ def make_bases(nx_obs, my_obs, degrees) -> Tuple[np.ndarray, List[str]]:
     return base_functions, base_names
 
 
-def name_and_save_primitives(mus, varmus, base_functions):
+def name_and_pickle_primitives(
+    mus_popu: Matching, varmus: np.ndarray, base_functions: np.ndarray
+) -> str:
+    """pickles the population matching, its variance, and the base functions,
+    and creates a qualified name
+
+    Args:
+        mus_popu: the population Matching
+        varmus: the corresponding variances
+        base_functions: the values of the base functions
+
+    Returns:
+        the qualified name
+    """
     full_model_name = model_name
     if shrink_factor != 1:
         full_model_name = f"{full_model_name}_f{shrink_factor}"
@@ -90,27 +116,41 @@ def name_and_save_primitives(mus, varmus, base_functions):
     if (age_start > 16) or (age_end < 40):
         full_model_name = f"{full_model_name}_a{age_start}_{age_end}"
     with open(
-        data_dir / f"{full_model_name}_mus_obs_{int(zero_guard)}.pkl",
+        data_dir / f"{full_model_name}_mus_popu_{int(zero_guard)}.pkl",
         "wb",
     ) as f:
-        pickle.dump(mus, f)
+        pickle.dump(mus_popu, f)
     with open(data_dir / f"{full_model_name}_varmus_norm.pkl", "wb") as f:
         pickle.dump(varmus, f)
     with open(data_dir / f"{full_model_name}_base_functions.pkl", "wb") as f:
         pickle.dump(base_functions, f)
+    return full_model_name
 
 
-def estimate_choosiow(full_model_name, mus_obs, base_functions):
+def estimate_choosiow(
+    full_model_name: str, mus_popu: Matching, base_functions: np.ndarray
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """estimates Choo and Siow on the population data
+
+    Args:
+        full_model_name: the qualified name
+        mus_popu: the population Matching
+        base_functions: the values of the base functions
+
+    Returns:
+        the estimated coefficients, theri estimated variance,
+        their estimated standard errors, and the estimated joint surplus
+    """
     if do_simuls_mde:
         mde_results = estimate_semilinear_mde(
-            mus_obs, base_functions, entropy_choo_siow
+            mus_popu, base_functions, entropy_choo_siow
         )
         estim_Phi = mde_results.estimated_Phi
         estim_coeffs = mde_results.estimated_coefficients
         varcov_coeffs = mde_results.varcov_coefficients
         std_coeffs = mde_results.stderrs_coefficients
     else:
-        poisson_results = choo_siow_poisson_glm(mus_obs, base_functions)
+        poisson_results = choo_siow_poisson_glm(mus_popu, base_functions)
         estim_Phi = poisson_results.estimated_Phi
         estim_coeffs = poisson_results.estimated_beta
         var_gamma = poisson_results.variance_gamma
@@ -165,11 +205,11 @@ if __name__ == "__main__":
     do_both = do_simuls_mde and do_simuls_poisson
 
     if model_name == "choo_siow_cupid":
-        mus_obs, varmus_obs = prepare_data_cupid()
-        muxy_obs, mux0_obs, mu0y_obs, nx_obs, my_obs = mus_obs.unpack()
-        base_functions, base_names = make_bases(nx_obs, my_obs, degrees)
-        full_model_name = name_and_save_primitives(
-            mus_obs, varmus_obs, base_functions
+        mus_popu, varmus_popu = prepare_data_cupid()
+        muxy_popu, mux0_popu, mu0y_popu, nx_popu, my_popu = mus_popu.unpack()
+        base_functions, base_names = make_bases(nx_popu, my_popu, degrees)
+        full_model_name = name_and_pickle_primitives(
+            mus_popu, varmus_popu, base_functions
         )
         (
             estim_coeffs,
@@ -179,7 +219,7 @@ if __name__ == "__main__":
         ) = estimate_choosiow()
 
         # we use the Phi and the margins we got from the Cupid dataset
-        choo_siow_estim = ChooSiowPrimitives(estim_Phi, nx_obs, my_obs)
+        choo_siow_estim = ChooSiowPrimitives(estim_Phi, nx_popu, my_popu)
     elif model_name.startswith(
         "choo_siow_firstsub"
     ):  # we regenerate the simulation in the first submitted version
@@ -280,8 +320,8 @@ if __name__ == "__main__":
         pickle.dump(simul_results, f)
 
     if plot_simuls:
-        n_households_obs = (
-            n_households_cupid_obs
+        n_households_popu = (
+            n_households_cupid_popu
             if full_model_name.startswith("choo_siow_cupid")
             else None
         )
@@ -292,7 +332,7 @@ if __name__ == "__main__":
             zero_guard,
             do_simuls_mde=do_simuls_mde,
             do_simuls_poisson=do_simuls_poisson,
-            n_households_obs=n_households_obs,
+            n_households_popu=n_households_popu,
         )
 
     seed = 75694

@@ -5,9 +5,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from cupid_matching.choo_siow import entropy_choo_siow
-from cupid_matching.matching_utils import Matching
-from cupid_matching.model_classes import ChooSiowPrimitives
 
 from rev1_simuls.utils import results_dir
 
@@ -118,7 +115,7 @@ def plot_simulation_results(
     value_coeff: int,  # the divider of the smallest positive mu
     do_simuls_mde: bool = True,  # do we simulate MDE
     do_simuls_poisson: bool = True,  # do we simulate Poisson
-    n_households_obs: float = None,  # the number of observed households in the Cupid dataset
+    n_households_popu: float = None,  # the number of households in the population in the Cupid dataset
 ) -> None:
     """plots the simulation results
 
@@ -129,7 +126,7 @@ def plot_simulation_results(
         value_coeff:  the divider of the smallest positive mu
         do_simuls_mde:  do we simulate the MDE
         do_simuls_poisson:   do we simulate Poisson
-        n_households_obs: the number of observed households in the Cupid dataset
+        n_households_popu: the number of households in the Cupid dataset
 
     Returns:
         nothing
@@ -144,7 +141,7 @@ def plot_simulation_results(
     n_bases = true_coeffs.size
     if full_model_name.startswith("choo_siow_cupid"):
         varcov_coeffs = results["Cupid varcov"]
-        varcov_rescaled = varcov_coeffs * n_households_obs / n_households_sim
+        varcov_rescaled = varcov_coeffs * n_households_popu / n_households_sim
 
     base_names = results["Base names"]
 

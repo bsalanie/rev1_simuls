@@ -17,13 +17,13 @@ shrink_factor = (
 n_households_cupid_pop = (
     13_274_041  # number of households in the Cupid population
 )
-n_households_cupid_obs = 75_265  # number of households in the Cupid sample
+n_households_cupid_popu = 75_265  # number of households in the Cupid sample
 
 use_rescale = False  # rescale the sample
 use_mde_correction = False  # use the `corrected` version of MDE
 
 #  number of households in the simulation:
-n_households_sim = n_households_cupid_obs
+n_households_sim = n_households_cupid_popu
 # n_households_sim =  1_000_000
 # n_households_sim =  n_households_cupid_pop
 
