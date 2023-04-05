@@ -46,6 +46,7 @@ nav:
   # - Report Issues: https://github.com/bsalanie/bs_cupid_try/issues
   - API Reference:
       - General Utilities: utils.md
+      - Configuration: config.md
       - Specification: specification.md
       - Reading the Data: read_data.md
       - Generating Plots: plots.md
