@@ -41,7 +41,6 @@ def _run_simul(
     Returns:
         the Results object(s) from the simulation
     """
-    global n_simuls_done
     do_both = do_simuls_mde and do_simuls_poisson
     mus_sim = choo_siow_true.simulate(n_households_sim, seed=seed)
     mus_sim_non0 = remove_zero_cells(mus_sim, coeff=value_coeff)
@@ -65,8 +64,6 @@ def _run_simul(
         estim_coeffs_poisson = poisson_results_sim.estimated_beta
         if verbose == 2:
             print(f"    Done Poisson {i_sim}")
-    n_simuls_done += 1
-    print(f"        Done {n_simuls_done} simuls")
     if verbose >= 1:
         print(f"        Done simul {i_sim}")
     if do_both:

@@ -1,5 +1,5 @@
 import pickle
-from typing import List, Tuple
+from typing import List
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -75,25 +75,23 @@ def _dataframe_results(
     ):  # we have an 'Expected' curve in the plot
         estimator_names = ["Expected"]
         estimates = estims[0].reshape(nkb)
-        if do_simuls_mde:
-            estimator_names += ["MDE"]
-            estimates = np.concatenate((estimates, estims[1].reshape(nkb)))
-            if do_simuls_poisson:
-                estimator_names += ["Poisson"]
-                estimates = np.concatenate((estimates, estims[2].reshape(nkb)))
-        elif do_simuls_poisson:
-            estimator_names += ["Poisson"]
-            estimates = np.concatenate((estimates, estims[1].reshape(nkb)))
+        i_curve = 1
     else:  # firstsub has no 'Expected' curve
-        if do_simuls_mde:
-            estimator_names = ["MDE"]
-            estimate = estims[0].reshape(nkb)
-            if do_simuls_poisson:
-                estimator_names += ["Poisson"]
-                estimate = np.concatenate((estimate, estims[1].reshape(nkb)))
-        elif do_simuls_poisson:
-            estimator_names = ["Poisson"]
-            estimate = estims[0].reshape(nkb)
+        estimator_names = []
+        i_curve = 0
+
+    if do_simuls_mde:
+        estimator_names += ["MDE"]
+        estimates = np.concatenate((estimates, estims[i_curve].reshape(nkb)))
+        i_curve += 1
+        if do_simuls_poisson:
+            estimator_names += ["Poisson"]
+            estimates = np.concatenate(
+                (estimates, estims[i_curve].reshape(nkb))
+            )
+    elif do_simuls_poisson:
+        estimator_names += ["Poisson"]
+        estimates = np.concatenate((estimates, estims[i_curve].reshape(nkb)))
 
     estimator = np.repeat(np.array(estimator_names), nkb)
     coefficient_names = base_names * n_kept * n_estims
@@ -115,7 +113,7 @@ def plot_simulation_results(
     value_coeff: int,  # the divider of the smallest positive mu
     do_simuls_mde: bool = True,  # do we simulate MDE
     do_simuls_poisson: bool = True,  # do we simulate Poisson
-    n_households_popu: float = None,  # the number of households in the population in the Cupid dataset
+    n_households_popu: float = None,  # the number of households in the Cupid dataset
 ) -> None:
     """plots the simulation results
 

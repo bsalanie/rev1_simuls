@@ -54,8 +54,9 @@ def prepare_data_cupid():
     \nThe data has {n_types_men} types of men and {n_types_women} types of women.
     """
     )
+    quantiles = np.arange(1, 10) / 100.0
     mus = Matching(muxy, nx, my)
-    qmus = np.quantile(muxy, np.arange(1, 100) / 100.0)
+    qmus = np.quantile(muxy, quantiles)
     mus_norm = (
         rescale_mus(mus, n_households_cupid_popu) if use_rescale else mus
     )
@@ -67,9 +68,10 @@ def prepare_data_cupid():
 
     mus_norm_fixed = remove_zero_cells(mus_norm, coeff=zero_guard)
     muxy_norm_fixed = mus_norm_fixed.muxy
-    qmus_fixed = np.quantile(muxy_norm_fixed, np.arange(1, 100) / 100.0)
+    qmus_fixed = np.quantile(muxy_norm_fixed, quantiles)
     print("   quantiles of raw and fixed muxy:")
-    print(np.column_stack((qmus, qmus_fixed)))
+    for q, qm, qmf in zip(quantiles, qmus, qmus_fixed):
+        print(f"{q: .3f}: {qm: .2e}    {qmf: .2e}")
     return mus_norm_fixed, varmus_norm
 
 
@@ -158,7 +160,8 @@ def estimate_choosiow(
         varcov_coeffs = var_gamma[-n_bases:, -n_bases:]
         std_coeffs = np.sqrt(np.diag(varcov_coeffs))
     print("original estimates:")
-    print(np.column_stack((estim_coeffs, std_coeffs)))
+    for base_name, coeff, stderr in zip(base_names, estim_coeffs, std_coeffs):
+        print(f"{base_name: <15}: {coeff: >10.3f}  ({stderr: >10.3f})")
 
     if shrink_factor != 1:
         # experiment with smaller Phi
@@ -208,6 +211,7 @@ if __name__ == "__main__":
         mus_popu, varmus_popu = prepare_data_cupid()
         muxy_popu, mux0_popu, mu0y_popu, nx_popu, my_popu = mus_popu.unpack()
         base_functions, base_names = make_bases(nx_popu, my_popu, degrees)
+        n_bases = len(base_names)
         full_model_name = name_and_pickle_primitives(
             mus_popu, varmus_popu, base_functions
         )
@@ -216,10 +220,10 @@ if __name__ == "__main__":
             varcov_coeffs,
             std_coeffs,
             estim_Phi,
-        ) = estimate_choosiow()
+        ) = estimate_choosiow(full_model_name, mus_popu, base_functions)
 
         # we use the Phi and the margins we got from the Cupid dataset
-        choo_siow_estim = ChooSiowPrimitives(estim_Phi, nx_popu, my_popu)
+        choo_siow_true = ChooSiowPrimitives(estim_Phi, nx_popu, my_popu)
     elif model_name.startswith(
         "choo_siow_firstsub"
     ):  # we regenerate the simulation in the first submitted version
@@ -239,7 +243,7 @@ if __name__ == "__main__":
         my1 = np.logspace(
             start=0, base=1 - t, stop=n_types_women - 1, num=n_types_women
         )
-        choo_siow_estim = ChooSiowPrimitives(Phi1, nx1, my1)
+        choo_siow_true = ChooSiowPrimitives(Phi1, nx1, my1)
         estim_coeffs = theta1
 
     # generate random seeds
@@ -258,6 +262,7 @@ if __name__ == "__main__":
         [
             i_sim,
             seeds[i_sim],
+            choo_siow_true,
             n_households_sim,
             base_functions,
             entropy,
@@ -269,7 +274,6 @@ if __name__ == "__main__":
         for i_sim in range(n_sim)
     ]
     nb_cpus = 4
-    n_simuls_done = 0
     with Pool(nb_cpus) as pool:
         results = pool.starmap(_run_simul, list_args)
 
@@ -336,9 +340,9 @@ if __name__ == "__main__":
         )
 
     seed = 75694
-    mus_sim = choo_siow_estim.simulate(n_households_sim, seed=seed)
-    qmus = np.quantile(mus_sim.muxy, np.arange(1, 20) / 20.0)
+    mus_sim = choo_siow_true.simulate(n_households_sim, seed=seed)
+    quantiles = np.arange(1, 10) / 100.0
+    qmus = np.quantile(mus_sim.muxy, quantiles)
     print("Quantiles of simulated mus:")
-    print(qmus)
-
-    np.sum(mus_sim.mu0y)
+    for q, qm in zip(quantiles, qmus):
+        print(f"{q: .3f}: {qm: 10.3f}")
