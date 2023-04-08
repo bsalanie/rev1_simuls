@@ -2,10 +2,9 @@ from typing import List, Tuple
 
 import numpy as np
 
+from cupid_matching.utils import nprepeat_col, nprepeat_row
 from rev1_simuls.utils import (
     legendre_polynomials,
-    nprepeat_col,
-    nprepeat_row,
     quantile_transform,
 )
 

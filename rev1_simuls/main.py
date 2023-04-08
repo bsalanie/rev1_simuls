@@ -9,9 +9,9 @@ from cupid_matching.choo_siow import (
     entropy_choo_siow_corrected,
 )
 from cupid_matching.matching_utils import Matching
-from cupid_matching.min_distance import MDEResults, estimate_semilinear_mde
+from cupid_matching.min_distance import estimate_semilinear_mde
 from cupid_matching.model_classes import ChooSiowPrimitives
-from cupid_matching.poisson_glm import PoissonGLMResults, choo_siow_poisson_glm
+from cupid_matching.poisson_glm import choo_siow_poisson_glm
 
 from rev1_simuls.simulate import _run_simul
 from rev1_simuls.plots import plot_simulation_results
@@ -23,7 +23,7 @@ from rev1_simuls.read_data import (
     reshape_varcov,
 )
 from rev1_simuls.specification import _generate_bases_firstsub, generate_bases
-from rev1_simuls.utils import data_dir, results_dir
+from rev1_simuls.utils import data_dir, results_dir, print_quantiles
 from rev1_simuls.config import (
     age_start,
     age_end,
@@ -54,24 +54,20 @@ def prepare_data_cupid():
     \nThe data has {n_types_men} types of men and {n_types_women} types of women.
     """
     )
-    quantiles = np.arange(1, 10) / 100.0
     mus = Matching(muxy, nx, my)
-    qmus = np.quantile(muxy, quantiles)
-    mus_norm = (
-        rescale_mus(mus, n_households_cupid_popu) if use_rescale else mus
-    )
+    mus_norm = rescale_mus(mus, n_households_sim) if use_rescale else mus
     varmus_norm = (
-        reshape_varcov(varmus, mus, n_households_cupid_popu)
+        reshape_varcov(varmus, mus, n_households_sim)
         if use_rescale
         else varmus
     )
-
     mus_norm_fixed = remove_zero_cells(mus_norm, coeff=zero_guard)
-    muxy_norm_fixed = mus_norm_fixed.muxy
-    qmus_fixed = np.quantile(muxy_norm_fixed, quantiles)
+
+    quantiles = np.arange(1, 10) / 100.0
     print("   quantiles of raw and fixed muxy:")
-    for q, qm, qmf in zip(quantiles, qmus, qmus_fixed):
-        print(f"{q: .3f}: {qm: .2e}    {qmf: .2e}")
+    print_quantiles(
+        [mus.muxy.flatten(), mus_norm_fixed.muxy.flatten()], quantiles
+    )
     return mus_norm_fixed, varmus_norm
 
 
@@ -342,7 +338,5 @@ if __name__ == "__main__":
     seed = 75694
     mus_sim = choo_siow_true.simulate(n_households_sim, seed=seed)
     quantiles = np.arange(1, 10) / 100.0
-    qmus = np.quantile(mus_sim.muxy, quantiles)
     print("Quantiles of simulated mus:")
-    for q, qm in zip(quantiles, qmus):
-        print(f"{q: .3f}: {qm: 10.3f}")
+    print_quantiles(mus_sim.muxy, quantiles)

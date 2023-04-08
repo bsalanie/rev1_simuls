@@ -59,7 +59,7 @@ def _run_simul(
         if verbose == 2:
             print(f"    Doing Poisson {i_sim}")
         poisson_results_sim = choo_siow_poisson_glm(
-            mus_sim_non0, base_functions, verbose=0
+            mus_sim, base_functions, verbose=0
         )
         estim_coeffs_poisson = poisson_results_sim.estimated_beta
         if verbose == 2:

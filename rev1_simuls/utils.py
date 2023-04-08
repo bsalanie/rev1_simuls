@@ -1,42 +1,66 @@
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
+from cupid_matching.utils import bs_error_abort, test_matrix, test_vector
 
 data_dir = Path("..") / "ChooSiow70nNdata"
 results_dir = Path("..") / "Results"
 
 
-def nprepeat_col(
-    v: np.ndarray,
-    n: int,
-) -> np.ndarray:
-    """create a matrix with `n` columns equal to the vector `v`
+@dataclass
+class VarianceMatching:
+    """the six matrix components of the variance of a Matching"""
 
-    Args:
-        v: a 1-dim array of size `m`
-        n:  the number of columns requested
+    var_xyzt: np.ndarray
+    var_xyz0: np.ndarray
+    var_xy0t: np.ndarray
+    var_x0z0: np.ndarray
+    var_x00t: np.ndarray
+    var_0y0t: np.ndarray
 
-    Returns:
-        a 2-dim array of shape `(m, n)`
-    """
-    return np.repeat(v[:, np.newaxis], n, axis=1)
+    def unpack(self):
+        return (
+            self.var_xyzt,
+            self.var_xyz0,
+            self.var_xy0t,
+            self.var_x0z0,
+            self.var_x00t,
+            self.var_0y0t,
+        )
 
-
-def nprepeat_row(
-    v: np.ndarray,
-    m: int,
-) -> np.ndarray:
-    """create a matrix with `m` rows equal to the vector `v`
-
-    Args:
-        v: a 1-dim array of size `n`
-        n:  the number of rows requested
-
-    Returns:
-        a 2-dim array of shape `(m, n)`
-    """
-    return np.repeat(v[np.newaxis, :], m, axis=0)
+    def __post__init__(self):
+        XY, XY2 = test_matrix(self.var_xyzt)
+        if XY2 != XY:
+            bs_error_abort(
+                f"var_xyzt should be a square matrix, not ({XY}, {XY2})"
+            )
+        XY3, X = test_matrix(self.var_xyz0)
+        if XY3 != XY:
+            bs_error_abort(f"var_xyz0 should have {XY} rows, not {XY3})")
+        XY4, Y = test_matrix(self.var_xy0t)
+        if XY4 != XY:
+            bs_error_abort(f"var_xy0t should have {XY} rows, not {XY4})")
+        if X * Y != XY:
+            bs_error_abort(
+                f"var_xyzt has {XY} rows, but varxyz0 has {X} columns and varxy0t has {Y}"
+            )
+        X2, X3 = test_matrix(self.var_x0z0)
+        if X2 != X:
+            bs_error_abort(f"var_x0z0 has {X2} rows, it should have {X}")
+        if X3 != X:
+            bs_error_abort(f"var_x0z0 has {X3} columns, it should have {X}")
+        X4, Y2 = test_matrix(self.var_x00t)
+        if X4 != X:
+            bs_error_abort(f"var_x00t has {X4} rows, it should have {X}")
+        if Y2 != Y:
+            bs_error_abort(f"var_x00t has {Y2} columns, it should have {Y}")
+        Y3, Y4 = test_matrix(self.var_0y0t)
+        if Y3 != Y:
+            bs_error_abort(f"var_x00t has {Y3} rows, it should have {Y}")
+        if Y4 != Y:
+            bs_error_abort(f"var_x00t has {Y4} columns, it should have {Y}")
 
 
 def legendre_polynomials(
@@ -89,3 +113,39 @@ def quantile_transform(v: np.ndarray) -> np.ndarray:
     for i in range(n):
         q[i] = np.sum(v <= v[i]) / (n + 1)
     return q
+
+
+def print_quantiles(
+    v: np.ndarray | list[np.ndarray], quantiles: np.ndarray
+) -> np.ndarray:
+    """print these quantiles of the array(s)
+
+    Args:
+        v:  a vector or a list of vectors
+        qtiles: the quantiles in [0,1]
+
+    Returns:
+         the corresponding quantiles as a vector or a matrix
+    """
+    nq = test_vector(quantiles)
+    if isinstance(v, np.ndarray):
+        qvals = np.quantile(v, quantiles)
+        for q, qv in zip(quantiles, qvals):
+            print(f"Quantile {q: .3f}: {qv: >10.3f}")
+    elif isinstance(v, list):
+        for v_i in v:
+            _ = test_vector(v_i)
+        nv = len(v)
+        qvals = np.zeros((nq, nv))
+        for i in range(nv):
+            qvals[:, i] = np.quantile(v[i], quantiles)
+        for iq, q in enumerate(quantiles):
+            s = f"Quantile {q: .3f}: "
+            qv = qvals[iq, :]
+            for i in range(nv):
+                s += f"  {qv[i]: >10.3f}"
+            print(f"{s}")
+    else:
+        bs_error_abort("v must be  a vector or a list of vectors")
+
+    return qvals
