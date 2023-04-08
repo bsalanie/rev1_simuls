@@ -122,7 +122,7 @@ def print_quantiles(
 
     Args:
         v:  a vector or a list of vectors
-        qtiles: the quantiles in [0,1]
+        quantiles: the quantiles in [0,1]
 
     Returns:
          the corresponding quantiles as a vector or a matrix
