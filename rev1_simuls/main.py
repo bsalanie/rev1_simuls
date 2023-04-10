@@ -2,6 +2,7 @@ import dataclasses as dc
 import pickle
 from multiprocessing.pool import ThreadPool as Pool
 from typing import Tuple, List
+import time
 
 import numpy as np
 from cupid_matching.choo_siow import (
@@ -270,8 +271,10 @@ if __name__ == "__main__":
         for i_sim in range(n_sim)
     ]
     nb_cpus = 4
+    start_simuls = time.time()
     with Pool(nb_cpus) as pool:
         results = pool.starmap(_run_simul, list_args)
+    end_simuls = time.time()
 
     # unpack simulation results
     if do_both:
@@ -337,6 +340,14 @@ if __name__ == "__main__":
 
     seed = 75694
     mus_sim = choo_siow_true.simulate(n_households_sim, seed=seed)
-    quantiles = np.arange(1, 10) / 100.0
-    print("Quantiles of simulated mus:")
-    print_quantiles(mus_sim.muxy, quantiles)
+    quantiles = np.arange(10, 30) / 100.0
+    print("Quantiles of population and simulated mus:")
+    print_quantiles(
+        [mus_popu.muxy.flatten(), mus_sim.muxy.flatten()], quantiles
+    )
+    print(
+        f"Numbers of marriages: {np.sum(mus_popu.muxy)} and {np.sum(mus_sim.muxy)}"
+    )
+    print(
+        f"\n\n**** {n_sim} simulations took {end_simuls - start_simuls: >10.3f} seconds****"
+    )
