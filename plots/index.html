@@ -311,6 +311,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../config/" class="md-nav__link">
+        Configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../specification/" class="md-nav__link">
         Specification
       </a>
@@ -485,7 +499,7 @@
 
 
 <h2 id="rev1_simuls.plots.plot_simulation_results" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">plot_simulation_results</span><span class="p">(</span><span class="n">full_model_name</span><span class="p">,</span> <span class="n">n_households_sim</span><span class="p">,</span> <span class="n">n_sim</span><span class="p">,</span> <span class="n">value_coeff</span><span class="p">,</span> <span class="n">do_simuls_mde</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">do_simuls_poisson</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_households_obs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">plot_simulation_results</span><span class="p">(</span><span class="n">full_model_name</span><span class="p">,</span> <span class="n">n_households_sim</span><span class="p">,</span> <span class="n">n_sim</span><span class="p">,</span> <span class="n">value_coeff</span><span class="p">,</span> <span class="n">do_simuls_mde</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">do_simuls_poisson</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_households_popu</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 <a href="#rev1_simuls.plots.plot_simulation_results" class="headerlink" title="Permanent link">&para;</a></h2>
 
@@ -566,11 +580,11 @@
           </td>
         </tr>
         <tr>
-          <td><code>n_households_obs</code></td>
+          <td><code>n_households_popu</code></td>
           <td>
                 <code>float</code>
           </td>
-          <td><p>the number of observed households in the Cupid dataset</p></td>
+          <td><p>the number of households in the Cupid dataset</p></td>
           <td>
                 <code>None</code>
           </td>
@@ -598,7 +612,10 @@
 
       <details class="quote">
         <summary>Source code in <code>rev1_simuls/plots.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">112</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
 <span class="normal">113</span>
 <span class="normal">114</span>
 <span class="normal">115</span>
@@ -711,7 +728,7 @@
     <span class="n">value_coeff</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>  <span class="c1"># the divider of the smallest positive mu</span>
     <span class="n">do_simuls_mde</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># do we simulate MDE</span>
     <span class="n">do_simuls_poisson</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># do we simulate Poisson</span>
-    <span class="n">n_households_obs</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># the number of observed households in the Cupid dataset</span>
+    <span class="n">n_households_popu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># the number of households in the Cupid dataset</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;plots the simulation results</span>
 
@@ -722,13 +739,14 @@
 <span class="sd">        value_coeff:  the divider of the smallest positive mu</span>
 <span class="sd">        do_simuls_mde:  do we simulate the MDE</span>
 <span class="sd">        do_simuls_poisson:   do we simulate Poisson</span>
-<span class="sd">        n_households_obs: the number of observed households in the Cupid dataset</span>
+<span class="sd">        n_households_popu: the number of households in the Cupid dataset</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        nothing</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">results_file</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">results_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">full_model_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">n_households_sim</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">value_coeff</span><span class="p">)</span><span class="si">}</span><span class="s2">.pkl&quot;</span>
+        <span class="n">results_dir</span>
+        <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">full_model_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">n_households_sim</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">value_coeff</span><span class="p">)</span><span class="si">}</span><span class="s2">.pkl&quot;</span>
     <span class="p">)</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">results_file</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">results</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
@@ -736,7 +754,7 @@
     <span class="n">n_bases</span> <span class="o">=</span> <span class="n">true_coeffs</span><span class="o">.</span><span class="n">size</span>
     <span class="k">if</span> <span class="n">full_model_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;choo_siow_cupid&quot;</span><span class="p">):</span>
         <span class="n">varcov_coeffs</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;Cupid varcov&quot;</span><span class="p">]</span>
-        <span class="n">varcov_rescaled</span> <span class="o">=</span> <span class="n">varcov_coeffs</span> <span class="o">*</span> <span class="n">n_households_obs</span> <span class="o">/</span> <span class="n">n_households_sim</span>
+        <span class="n">varcov_rescaled</span> <span class="o">=</span> <span class="n">varcov_coeffs</span> <span class="o">*</span> <span class="n">n_households_popu</span> <span class="o">/</span> <span class="n">n_households_sim</span>
 
     <span class="n">base_names</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;Base names&quot;</span><span class="p">]</span>
 
@@ -747,7 +765,9 @@
         <span class="n">outliers_mask</span> <span class="o">=</span> <span class="n">outliers_mask</span> <span class="o">|</span> <span class="n">outliers_mde</span>
     <span class="k">if</span> <span class="n">do_simuls_poisson</span><span class="p">:</span>
         <span class="n">estim_poisson</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;Poisson&quot;</span><span class="p">]</span>
-        <span class="n">outliers_poisson</span> <span class="o">=</span> <span class="n">_discard_outliers</span><span class="p">(</span><span class="n">estim_poisson</span><span class="p">,</span> <span class="s2">&quot;Poisson&quot;</span><span class="p">,</span> <span class="n">nstd</span><span class="o">=</span><span class="mf">4.0</span><span class="p">)</span>
+        <span class="n">outliers_poisson</span> <span class="o">=</span> <span class="n">_discard_outliers</span><span class="p">(</span>
+            <span class="n">estim_poisson</span><span class="p">,</span> <span class="s2">&quot;Poisson&quot;</span><span class="p">,</span> <span class="n">nstd</span><span class="o">=</span><span class="mf">4.0</span>
+        <span class="p">)</span>
         <span class="n">outliers_mask</span> <span class="o">=</span> <span class="n">outliers_mask</span> <span class="o">|</span> <span class="n">outliers_poisson</span>
 
     <span class="n">kept</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_sim</span>

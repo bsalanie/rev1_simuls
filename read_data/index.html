@@ -313,6 +313,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../config/" class="md-nav__link">
+        Configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../specification/" class="md-nav__link">
         Specification
       </a>
@@ -582,13 +596,13 @@
 
       <details class="quote">
         <summary>Source code in <code>rev1_simuls/read_data.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">10</span>
 <span class="normal">11</span>
 <span class="normal">12</span>
 <span class="normal">13</span>
-<span class="normal">14</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ages_slice</span><span class="p">(</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ages_slice</span><span class="p">(</span>
     <span class="n">age_start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">age_end</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">slice</span><span class="p">:</span>
@@ -617,16 +631,16 @@
 
       <details class="quote">
         <summary>Source code in <code>rev1_simuls/read_data.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">80</span>
 <span class="normal">81</span>
 <span class="normal">82</span>
 <span class="normal">83</span>
 <span class="normal">84</span>
-<span class="normal">85</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_margins</span><span class="p">(</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_margins</span><span class="p">(</span>
     <span class="n">data_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>  <span class="c1"># the data directory</span>
     <span class="n">age_start</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>  <span class="c1"># we exclude younger ages</span>
     <span class="n">age_end</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span>  <span class="c1"># we exclude older ages</span>
@@ -658,17 +672,17 @@
 
       <details class="quote">
         <summary>Source code in <code>rev1_simuls/read_data.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span>
-<span class="normal">96</span>
-<span class="normal">97</span>
-<span class="normal">98</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_marriages</span><span class="p">(</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_marriages</span><span class="p">(</span>
     <span class="n">data_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>  <span class="c1"># the data directory</span>
     <span class="n">age_start</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>  <span class="c1"># we exclude younger ages</span>
     <span class="n">age_end</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span>  <span class="c1"># we exclude older ages</span>
@@ -701,14 +715,7 @@
 
       <details class="quote">
         <summary>Source code in <code>rev1_simuls/read_data.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">177</span>
-<span class="normal">178</span>
-<span class="normal">179</span>
-<span class="normal">180</span>
-<span class="normal">181</span>
-<span class="normal">182</span>
-<span class="normal">183</span>
-<span class="normal">184</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">184</span>
 <span class="normal">185</span>
 <span class="normal">186</span>
 <span class="normal">187</span>
@@ -735,7 +742,16 @@
 <span class="normal">208</span>
 <span class="normal">209</span>
 <span class="normal">210</span>
-<span class="normal">211</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">remove_zero_cells</span><span class="p">(</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">remove_zero_cells</span><span class="p">(</span>
     <span class="n">mus</span><span class="p">:</span> <span class="n">Matching</span><span class="p">,</span>  <span class="c1"># muxy, mux0, mu0y, n, m</span>
     <span class="n">coeff</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>  <span class="c1"># default scale factor for delta</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Matching</span><span class="p">:</span>  <span class="c1"># the transformed muxy, mux0, mu0y, nx, my</span>
@@ -767,7 +783,9 @@
         <span class="n">muxy_fixed</span> <span class="o">*=</span> <span class="n">scale_factor</span>
         <span class="n">mux0_fixed</span> <span class="o">*=</span> <span class="n">scale_factor</span>
         <span class="n">mux0_fixed</span> <span class="o">*=</span> <span class="n">scale_factor</span>
-        <span class="n">nx_fixed</span><span class="p">,</span> <span class="n">my_fixed</span> <span class="o">=</span> <span class="n">_compute_margins</span><span class="p">(</span><span class="n">muxy_fixed</span><span class="p">,</span> <span class="n">mux0_fixed</span><span class="p">,</span> <span class="n">mu0y_fixed</span><span class="p">)</span>
+        <span class="n">nx_fixed</span><span class="p">,</span> <span class="n">my_fixed</span> <span class="o">=</span> <span class="n">_compute_margins</span><span class="p">(</span>
+            <span class="n">muxy_fixed</span><span class="p">,</span> <span class="n">mux0_fixed</span><span class="p">,</span> <span class="n">mu0y_fixed</span>
+        <span class="p">)</span>
         <span class="n">mus_fixed</span> <span class="o">=</span> <span class="n">Matching</span><span class="p">(</span><span class="n">muxy_fixed</span><span class="p">,</span> <span class="n">nx_fixed</span><span class="p">,</span> <span class="n">my_fixed</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">mus_fixed</span>
 </code></pre></div></td></tr></table></div>
@@ -792,19 +810,19 @@
 
       <details class="quote">
         <summary>Source code in <code>rev1_simuls/read_data.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">153</span>
-<span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">158</span>
 <span class="normal">159</span>
 <span class="normal">160</span>
 <span class="normal">161</span>
 <span class="normal">162</span>
 <span class="normal">163</span>
 <span class="normal">164</span>
-<span class="normal">165</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">rescale_mus</span><span class="p">(</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">rescale_mus</span><span class="p">(</span>
     <span class="n">mus</span><span class="p">:</span> <span class="n">Matching</span><span class="p">,</span>  <span class="c1"># muxy, mux0, mu0y</span>
     <span class="n">n_households</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>  <span class="c1"># the number of households we want</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Matching</span><span class="p">:</span>  <span class="c1"># the normalized Matching after rescaling</span>
@@ -893,7 +911,7 @@ and renormalizes for a requested total number of households</p>
     <tbody>
         <tr>
           <td>
-                <code>tuple[<span title="numpy">np</span>.<span title="numpy.ndarray">ndarray</span>]</code>
+                <code><a class="autorefs autorefs-internal" title="rev1_simuls.utils.VarianceMatching" href="../utils/#rev1_simuls.utils.VarianceMatching">VarianceMatching</a></code>
           </td>
           <td><p>the 6 constituent blocks of the normalized variance-covariance</p></td>
         </tr>
@@ -902,11 +920,7 @@ and renormalizes for a requested total number of households</p>
 
       <details class="quote">
         <summary>Source code in <code>rev1_simuls/read_data.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">105</span>
 <span class="normal">106</span>
 <span class="normal">107</span>
 <span class="normal">108</span>
@@ -951,11 +965,16 @@ and renormalizes for a requested total number of households</p>
 <span class="normal">147</span>
 <span class="normal">148</span>
 <span class="normal">149</span>
-<span class="normal">150</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">reshape_varcov</span><span class="p">(</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">reshape_varcov</span><span class="p">(</span>
     <span class="n">varmus</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">mus</span><span class="p">:</span> <span class="n">Matching</span><span class="p">,</span>
     <span class="n">n_households</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">VarianceMatching</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;splits the variance-covariance matrix</span>
 <span class="sd">    and renormalizes for a requested total number of households</span>
 
@@ -987,19 +1006,20 @@ and renormalizes for a requested total number of households</p>
     <span class="n">varmus_0y0t</span> <span class="o">=</span> <span class="n">varmus</span><span class="p">[</span>
         <span class="p">(</span><span class="n">n_prod_categories</span> <span class="o">+</span> <span class="n">ncat_men</span><span class="p">)</span> <span class="p">:,</span> <span class="p">(</span><span class="n">n_prod_categories</span> <span class="o">+</span> <span class="n">ncat_men</span><span class="p">)</span> <span class="p">:</span>
     <span class="p">]</span>
-    <span class="n">varcovs</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">varmus_xyzt</span><span class="p">,</span>
-        <span class="n">varmus_xyz0</span><span class="p">,</span>
-        <span class="n">varmus_xy0t</span><span class="p">,</span>
-        <span class="n">varmus_x0z0</span><span class="p">,</span>
-        <span class="n">varmus_x00y</span><span class="p">,</span>
-        <span class="n">varmus_0y0t</span><span class="p">,</span>
-    <span class="p">)</span>
     <span class="c1"># then we rescale</span>
     <span class="n">n_households_mus</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">muxy</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">mux0</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">mu0y</span><span class="p">)</span>
     <span class="n">rescale_factor</span> <span class="o">=</span> <span class="n">n_households</span> <span class="o">/</span> <span class="n">n_households_mus</span>
     <span class="n">rescale_factor2</span> <span class="o">=</span> <span class="n">rescale_factor</span> <span class="o">*</span> <span class="n">rescale_factor</span>
-    <span class="n">varcovs</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">v</span> <span class="o">*</span> <span class="n">rescale_factor2</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">varcovs</span><span class="p">)</span>
+
+    <span class="n">varcovs</span> <span class="o">=</span> <span class="n">VarianceMatching</span><span class="p">(</span>
+        <span class="n">var_xyzt</span><span class="o">=</span><span class="n">varmus_xyzt</span> <span class="o">*</span> <span class="n">rescale_factor2</span><span class="p">,</span>
+        <span class="n">var_xyz0</span><span class="o">=</span><span class="n">varmus_xyz0</span> <span class="o">*</span> <span class="n">rescale_factor2</span><span class="p">,</span>
+        <span class="n">var_xy0t</span><span class="o">=</span><span class="n">varmus_xy0t</span> <span class="o">*</span> <span class="n">rescale_factor2</span><span class="p">,</span>
+        <span class="n">var_x0z0</span><span class="o">=</span><span class="n">varmus_x0z0</span> <span class="o">*</span> <span class="n">rescale_factor2</span><span class="p">,</span>
+        <span class="n">var_x00y</span><span class="o">=</span><span class="n">varmus_x00y</span> <span class="o">*</span> <span class="n">rescale_factor2</span><span class="p">,</span>
+        <span class="n">var_0y0t</span><span class="o">=</span><span class="n">varmus_0y0t</span> <span class="o">*</span> <span class="n">rescale_factor2</span><span class="p">,</span>
+    <span class="p">)</span>
+
     <span class="k">return</span> <span class="n">varcovs</span>
 </code></pre></div></td></tr></table></div>
       </details>
@@ -1023,9 +1043,7 @@ and renormalizes for a requested total number of households</p>
 
       <details class="quote">
         <summary>Source code in <code>rev1_simuls/read_data.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">19</span>
 <span class="normal">20</span>
 <span class="normal">21</span>
 <span class="normal">22</span>
@@ -1079,61 +1097,67 @@ and renormalizes for a requested total number of households</p>
 <span class="normal">70</span>
 <span class="normal">71</span>
 <span class="normal">72</span>
-<span class="normal">73</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">varmus_select_ages</span><span class="p">(</span>
-    <span class="n">varmus</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">varmus_select_ages</span><span class="p">(</span>
+    <span class="n">varmus</span><span class="p">:</span> <span class="n">VarianceMatching</span><span class="p">,</span>
     <span class="n">age_start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">age_end</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">VarianceMatching</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;extracts the age-appropriate part of varmus&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">age_start</span> <span class="o">&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">age_end</span> <span class="o">&lt;</span> <span class="mi">40</span><span class="p">):</span>
-        <span class="n">nages</span> <span class="o">=</span> <span class="mi">25</span>
-        <span class="n">nages2</span> <span class="o">=</span> <span class="n">nages</span> <span class="o">*</span> <span class="n">nages</span>
-        <span class="n">nb_ages</span> <span class="o">=</span> <span class="n">age_end</span> <span class="o">-</span> <span class="n">age_start</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="n">nb_ages2</span> <span class="o">=</span> <span class="n">nb_ages</span> <span class="o">*</span> <span class="n">nb_ages</span>
-        <span class="n">vmus_dim</span> <span class="o">=</span> <span class="n">nb_ages2</span> <span class="o">+</span> <span class="n">nb_ages</span> <span class="o">+</span> <span class="n">nb_ages</span>
-        <span class="n">vmus</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">vmus_dim</span><span class="p">,</span> <span class="n">vmus_dim</span><span class="p">))</span>
+        <span class="p">(</span>
+            <span class="n">varmus_xyzt</span><span class="p">,</span>
+            <span class="n">varmus_xyz0</span><span class="p">,</span>
+            <span class="n">varmus_xy0t</span><span class="p">,</span>
+            <span class="n">varmus_x0z0</span><span class="p">,</span>
+            <span class="n">varmus_x00t</span><span class="p">,</span>
+            <span class="n">varmus_0y0t</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="n">varmus</span><span class="o">.</span><span class="n">unpack</span><span class="p">()</span>
+        <span class="n">old_nages</span> <span class="o">=</span> <span class="mi">25</span>
+        <span class="n">new_nages</span> <span class="o">=</span> <span class="n">age_end</span> <span class="o">-</span> <span class="n">age_start</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">new_nages2</span> <span class="o">=</span> <span class="n">new_nages</span> <span class="o">*</span> <span class="n">new_nages</span>
+        <span class="n">vmus_xyzt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">new_nages2</span><span class="p">,</span> <span class="n">new_nages2</span><span class="p">))</span>
+        <span class="n">vmus_xyz0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">new_nages2</span><span class="p">,</span> <span class="n">new_nages</span><span class="p">))</span>
+        <span class="n">vmus_xy0t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">new_nages2</span><span class="p">,</span> <span class="n">new_nages</span><span class="p">))</span>
+        <span class="n">vmus_x0z0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">new_nages</span><span class="p">,</span> <span class="n">new_nages</span><span class="p">))</span>
+        <span class="n">vmus_x00t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">new_nages</span><span class="p">,</span> <span class="n">new_nages</span><span class="p">))</span>
+        <span class="n">vmus_0y0t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">new_nages</span><span class="p">,</span> <span class="n">new_nages</span><span class="p">))</span>
         <span class="n">age0</span><span class="p">,</span> <span class="n">age1</span> <span class="o">=</span> <span class="n">age_start</span> <span class="o">-</span> <span class="mi">16</span><span class="p">,</span> <span class="n">age_end</span> <span class="o">-</span> <span class="mi">15</span>
-        <span class="k">for</span> <span class="n">x1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nb_ages</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">x1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">new_nages</span><span class="p">):</span>
             <span class="n">ox1</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">age0</span>
-            <span class="k">for</span> <span class="n">y1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nb_ages</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">y1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">new_nages</span><span class="p">):</span>
                 <span class="n">oy1</span> <span class="o">=</span> <span class="n">y1</span> <span class="o">+</span> <span class="n">age0</span>
-                <span class="n">varmus1</span> <span class="o">=</span> <span class="n">varmus</span><span class="p">[</span><span class="n">ox1</span> <span class="o">*</span> <span class="n">nages</span> <span class="o">+</span> <span class="n">oy1</span><span class="p">,</span> <span class="p">:]</span>
-                <span class="n">vmus1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">vmus_dim</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">x2</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nb_ages</span><span class="p">):</span>
+                <span class="n">oxy1</span> <span class="o">=</span> <span class="n">ox1</span> <span class="o">*</span> <span class="n">old_nages</span> <span class="o">+</span> <span class="n">oy1</span>
+                <span class="n">varmus_xyzt1</span> <span class="o">=</span> <span class="n">varmus_xyzt</span><span class="p">[</span><span class="n">oxy1</span><span class="p">,</span> <span class="p">:]</span>
+                <span class="n">varmus_xyz01</span> <span class="o">=</span> <span class="n">varmus_xyz0</span><span class="p">[</span><span class="n">oxy1</span><span class="p">,</span> <span class="p">:]</span>
+                <span class="n">varmus_xy0t1</span> <span class="o">=</span> <span class="n">varmus_xy0t</span><span class="p">[</span><span class="n">oxy1</span><span class="p">,</span> <span class="p">:]</span>
+                <span class="k">for</span> <span class="n">x2</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">new_nages</span><span class="p">):</span>
                     <span class="n">ox2</span> <span class="o">=</span> <span class="n">x2</span> <span class="o">+</span> <span class="n">age0</span>
-                    <span class="n">vmus1</span><span class="p">[(</span><span class="n">x2</span> <span class="o">*</span> <span class="n">nb_ages</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">x2</span> <span class="o">*</span> <span class="n">nb_ages</span> <span class="o">+</span> <span class="n">nb_ages</span><span class="p">)]</span> <span class="o">=</span> <span class="n">varmus1</span><span class="p">[</span>
-                        <span class="p">(</span><span class="n">ox2</span> <span class="o">*</span> <span class="n">nages</span> <span class="o">+</span> <span class="n">age0</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">ox2</span> <span class="o">*</span> <span class="n">nages</span> <span class="o">+</span> <span class="n">age1</span><span class="p">)</span>
+                    <span class="n">vmus_xyzt</span><span class="p">[</span>
+                        <span class="n">oxy1</span><span class="p">,</span> <span class="p">(</span><span class="n">x2</span> <span class="o">*</span> <span class="n">new_nages</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">x2</span> <span class="o">*</span> <span class="n">new_nages</span> <span class="o">+</span> <span class="n">new_nages</span><span class="p">)</span>
+                    <span class="p">]</span> <span class="o">=</span> <span class="n">varmus_xyzt1</span><span class="p">[</span>
+                        <span class="p">(</span><span class="n">ox2</span> <span class="o">*</span> <span class="n">old_nages</span> <span class="o">+</span> <span class="n">age0</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">ox2</span> <span class="o">*</span> <span class="n">old_nages</span> <span class="o">+</span> <span class="n">age1</span><span class="p">)</span>
                     <span class="p">]</span>
-                    <span class="n">vmus1</span><span class="p">[</span><span class="n">nb_ages2</span> <span class="p">:</span> <span class="p">(</span><span class="n">nb_ages2</span> <span class="o">+</span> <span class="n">nb_ages</span><span class="p">)]</span> <span class="o">=</span> <span class="n">varmus1</span><span class="p">[</span>
-                        <span class="p">(</span><span class="n">nages2</span> <span class="o">+</span> <span class="n">age0</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">nages2</span> <span class="o">+</span> <span class="n">age1</span><span class="p">)</span>
-                    <span class="p">]</span>
-                    <span class="n">vmus1</span><span class="p">[(</span><span class="n">nb_ages2</span> <span class="o">+</span> <span class="n">nb_ages</span><span class="p">)</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">varmus1</span><span class="p">[</span>
-                        <span class="p">(</span><span class="n">nages2</span> <span class="o">+</span> <span class="n">nages</span> <span class="o">+</span> <span class="n">age0</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">nages2</span> <span class="o">+</span> <span class="n">nages</span> <span class="o">+</span> <span class="n">age1</span><span class="p">)</span>
-                    <span class="p">]</span>
-                    <span class="n">vmus</span><span class="p">[</span><span class="n">x1</span> <span class="o">*</span> <span class="n">nb_ages</span> <span class="o">+</span> <span class="n">y1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">vmus1</span>
-        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nb_ages</span><span class="p">):</span>
+                <span class="n">vmus_xyz0</span><span class="p">[</span><span class="n">oxy1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">varmus_xyz01</span><span class="p">[</span><span class="n">age0</span><span class="p">:</span><span class="n">age1</span><span class="p">]</span>
+                <span class="n">vmus_xy0t</span><span class="p">[</span><span class="n">oxy1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">varmus_xy0t1</span><span class="p">[</span><span class="n">age0</span><span class="p">:</span><span class="n">age1</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">new_nages</span><span class="p">):</span>
             <span class="n">ox</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">age0</span>
-            <span class="n">vmus</span><span class="p">[</span><span class="n">nb_ages2</span> <span class="o">+</span> <span class="n">x</span><span class="p">,</span> <span class="n">nb_ages2</span> <span class="p">:</span> <span class="p">(</span><span class="n">nb_ages2</span> <span class="o">+</span> <span class="n">nb_ages</span><span class="p">)]</span> <span class="o">=</span> <span class="n">varmus</span><span class="p">[</span>
-                <span class="n">nages2</span> <span class="o">+</span> <span class="n">ox</span><span class="p">,</span> <span class="p">(</span><span class="n">nages2</span> <span class="o">+</span> <span class="n">age0</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">nages2</span> <span class="o">+</span> <span class="n">age1</span><span class="p">)</span>
-            <span class="p">]</span>
-            <span class="n">vmus</span><span class="p">[</span><span class="n">nb_ages2</span> <span class="o">+</span> <span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">nb_ages2</span> <span class="o">+</span> <span class="n">nb_ages</span><span class="p">)</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">varmus</span><span class="p">[</span>
-                <span class="n">nages2</span> <span class="o">+</span> <span class="n">ox</span><span class="p">,</span> <span class="p">(</span><span class="n">nages2</span> <span class="o">+</span> <span class="n">nages</span> <span class="o">+</span> <span class="n">age0</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">nages2</span> <span class="o">+</span> <span class="n">nages</span> <span class="o">+</span> <span class="n">age1</span><span class="p">)</span>
-            <span class="p">]</span>
-        <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nb_ages</span><span class="p">):</span>
-            <span class="n">vmus</span><span class="p">[</span><span class="n">nb_ages2</span> <span class="o">+</span> <span class="n">nb_ages</span> <span class="o">+</span> <span class="n">y</span><span class="p">,</span> <span class="p">(</span><span class="n">nb_ages2</span> <span class="o">+</span> <span class="n">nb_ages</span><span class="p">)</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">varmus</span><span class="p">[</span>
-                <span class="n">nages2</span> <span class="o">+</span> <span class="n">nages</span> <span class="o">+</span> <span class="n">ox</span><span class="p">,</span>
-                <span class="p">(</span><span class="n">nages2</span> <span class="o">+</span> <span class="n">nages</span> <span class="o">+</span> <span class="n">age0</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">nages2</span> <span class="o">+</span> <span class="n">nages</span> <span class="o">+</span> <span class="n">age1</span><span class="p">),</span>
-            <span class="p">]</span>
-        <span class="n">vmus</span><span class="p">[</span><span class="n">nb_ages2</span> <span class="p">:</span> <span class="p">(</span><span class="n">nb_ages2</span> <span class="o">+</span> <span class="n">nb_ages</span><span class="p">),</span> <span class="p">:</span><span class="n">nb_ages2</span><span class="p">]</span> <span class="o">=</span> <span class="n">vmus</span><span class="p">[</span>
-            <span class="p">:</span><span class="n">nb_ages2</span><span class="p">,</span> <span class="n">nb_ages2</span> <span class="p">:</span> <span class="p">(</span><span class="n">nb_ages2</span> <span class="o">+</span> <span class="n">nb_ages</span><span class="p">)</span>
-        <span class="p">]</span><span class="o">.</span><span class="n">T</span>
-        <span class="n">vmus</span><span class="p">[(</span><span class="n">nb_ages2</span> <span class="o">+</span> <span class="n">nb_ages</span><span class="p">)</span> <span class="p">:,</span> <span class="p">:</span><span class="n">nb_ages2</span><span class="p">]</span> <span class="o">=</span> <span class="n">vmus</span><span class="p">[</span>
-            <span class="p">:</span><span class="n">nb_ages2</span><span class="p">,</span> <span class="p">(</span><span class="n">nb_ages2</span> <span class="o">+</span> <span class="n">nb_ages</span><span class="p">)</span> <span class="p">:</span>
-        <span class="p">]</span><span class="o">.</span><span class="n">T</span>
-        <span class="n">vmus</span><span class="p">[(</span><span class="n">nb_ages2</span> <span class="o">+</span> <span class="n">nb_ages</span><span class="p">)</span> <span class="p">:,</span> <span class="n">nb_ages2</span> <span class="p">:</span> <span class="p">(</span><span class="n">nb_ages2</span> <span class="o">+</span> <span class="n">nb_ages</span><span class="p">)]</span> <span class="o">=</span> <span class="n">vmus</span><span class="p">[</span>
-            <span class="n">nb_ages2</span> <span class="p">:</span> <span class="p">(</span><span class="n">nb_ages2</span> <span class="o">+</span> <span class="n">nb_ages</span><span class="p">),</span> <span class="p">(</span><span class="n">nb_ages2</span> <span class="o">+</span> <span class="n">nb_ages</span><span class="p">)</span> <span class="p">:</span>
-        <span class="p">]</span><span class="o">.</span><span class="n">T</span>
-        <span class="k">return</span> <span class="n">vmus</span>
+            <span class="n">vmus_x0z0</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">varmus_x0z0</span><span class="p">[</span><span class="n">ox</span><span class="p">,</span> <span class="n">age0</span><span class="p">:</span><span class="n">age1</span><span class="p">]</span>
+            <span class="n">vmus_x00t</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">varmus_x00t</span><span class="p">[</span><span class="n">ox</span><span class="p">,</span> <span class="n">age0</span><span class="p">:</span><span class="n">age1</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">new_nages</span><span class="p">):</span>
+            <span class="n">oy</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">age0</span>
+            <span class="n">vmus_0y0t</span><span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">varmus</span><span class="p">[</span><span class="n">oy</span><span class="p">,</span> <span class="n">age0</span><span class="p">:</span><span class="n">age1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">VarianceMatching</span><span class="p">(</span>
+            <span class="n">var_xyzt</span><span class="o">=</span><span class="n">vmus_xyzt</span><span class="p">,</span>
+            <span class="n">var_xyz0</span><span class="o">=</span><span class="n">vmus_xyz0</span><span class="p">,</span>
+            <span class="n">var_xy0t</span><span class="o">=</span><span class="n">vmus_xy0t</span><span class="p">,</span>
+            <span class="n">var_x0z0</span><span class="o">=</span><span class="n">vmus_x0z0</span><span class="p">,</span>
+            <span class="n">var_x00t</span><span class="o">=</span><span class="n">vmus_x00t</span><span class="p">,</span>
+            <span class="n">var_0y0t</span><span class="o">=</span><span class="n">vmus_0y0t</span><span class="p">,</span>
+        <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">varmus</span>
 </code></pre></div></td></tr></table></div>
