@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Optional, Tuple
+import pickle
 
 import numpy as np
 from cupid_matching.matching_utils import Matching, _compute_margins
@@ -79,24 +80,27 @@ def varmus_select_ages(
 
 def read_margins(
     data_dir: Path,  # the data directory
+    sample_size: str,  # large or small sample
     age_start: Optional[int] = 16,  # we exclude younger ages
     age_end: Optional[int] = 40,  # we exclude older ages
 ) -> Tuple[np.ndarray, np.ndarray]:
     """reads and returns the margins for men and for women"""
-    nx = np.loadtxt(data_dir / "nx70n.txt")
-    my = np.loadtxt(data_dir / "my70n.txt")
+    nx = np.loadtxt(data_dir / f"{sample_size}_nx.txt")
+    my = np.loadtxt(data_dir / f"{sample_size}_my.txt")
     ages = ages_slice(age_start, age_end)
     return nx[ages], my[ages]
 
 
 def read_marriages(
     data_dir: Path,  # the data directory
+    sample_size: str,  # large or small sample
     age_start: Optional[int] = 16,  # we exclude younger ages
     age_end: Optional[int] = 40,  # we exclude older ages
 ) -> Tuple[np.ndarray, np.ndarray]:
     """reads and returns the marriages and the variances"""
-    muxy = np.loadtxt(data_dir / "muxy70nN.txt")
-    varmus = np.loadtxt(data_dir / "varmus70nN.txt")
+    muxy = np.loadtxt(data_dir / f"{sample_size}_muxy.txt")
+    with open(data_dir / f"{sample_size}_varmus.pkl", "rb") as f:
+        varmus = pickle.load(f)
     vmus = varmus_select_ages(varmus, age_start, age_end)
     ages = ages_slice(age_start, age_end)
     return muxy[ages, ages], vmus

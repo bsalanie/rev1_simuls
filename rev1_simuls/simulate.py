@@ -15,10 +15,11 @@ def _run_simul(
     i_sim: int,
     seed: int,
     choo_siow_true: ChooSiowPrimitives,
-    n_households_sim: float,
+    sample_size: str,
+    n_households_obs: int,
     base_functions: np.ndarray,
     entropy: EntropyFunctions,
-    value_coeff: float,
+    zero_guard: int,
     do_simuls_mde: bool,
     do_simuls_poisson: bool,
     verbose: int = 0,
@@ -29,10 +30,11 @@ def _run_simul(
         i_sim: the index of the simulation
         seed: the seed for its random draws
         choo_siow_true: the DGP we simulate from
-        n_households_sim: the number of households in the simulation
+        sample_size: "large" or "small"
+        n_households_obs: the number of households
         base_functions:  the bases
         entropy:  the entropy
-        value_coeff: the divider
+        zero_guard: the divider
         do_simuls_mde: run the MDE simulation
         do_simuls_poisson:  run the Poisson simulation
         verbose:  how verbose: 1 print simulation number,
@@ -42,8 +44,8 @@ def _run_simul(
         the Results object(s) from the simulation
     """
     do_both = do_simuls_mde and do_simuls_poisson
-    mus_sim = choo_siow_true.simulate(n_households_sim, seed=seed)
-    mus_sim_non0 = remove_zero_cells(mus_sim, coeff=value_coeff)
+    mus_sim = choo_siow_true.simulate(n_households_obs, seed=seed)
+    mus_sim_non0 = remove_zero_cells(mus_sim, coeff=zero_guard)
     if verbose >= 1:
         print(f"Doing simul {i_sim}")
     if do_simuls_mde:

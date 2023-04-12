@@ -9,6 +9,34 @@ from rev1_simuls.utils import (
 )
 
 
+def monomial_name(var: str, deg: int) -> str:
+    """create a string with a nice name for a univariate term"""
+    if deg == 0:
+        return 1
+    if deg == 1:
+        return var
+    if deg > 1:
+        return var + "^" + str(deg)
+
+
+def make_base_name(deg_x: int, deg_y: int) -> str:
+    """create a string with a nice name for a bivariate term
+
+    Args:
+        deg_x: degree in x
+        deg_y: degree in y
+
+    Returns:
+        a string that looks like x^a y^b
+    """
+    if deg_x == 0:
+        return monomial_name("y", deg_y)
+    if deg_y == 0:
+        return monomial_name("x", deg_x)
+    # both degrees are positive
+    return monomial_name("x", deg_x) + " " + monomial_name("y", deg_y)
+
+
 def generate_bases(
     nx: np.ndarray,
     my: np.ndarray,
@@ -50,7 +78,7 @@ def generate_bases(
         poly_x = polys_x[:, deg_x]
         poly_y = polys_y[:, deg_y]
         base_funs[:, :, i_base] = np.outer(poly_x, poly_y)
-        base_names[i_base] = f"x^{deg_x} * y^{deg_y}"
+        base_names[i_base] = make_base_name(deg_x, deg_y)
         i_base += 1
     return base_funs, base_names
 

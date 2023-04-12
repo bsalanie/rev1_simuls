@@ -70,15 +70,9 @@ def _dataframe_results(
             simulation[(i_e * nkb + i) : (i_e * nkb + i + n_bases)] = i_sim_vec
         i += n_bases
 
-    if full_model_name.startswith(
-        "choo_siow_cupid"
-    ):  # we have an 'Expected' curve in the plot
-        estimator_names = ["Expected"]
-        estimates = estims[0].reshape(nkb)
-        i_curve = 1
-    else:  # firstsub has no 'Expected' curve
-        estimator_names = []
-        i_curve = 0
+    estimator_names = ["Expected"]
+    estimates = estims[0].reshape(nkb)
+    i_curve = 1
 
     if do_simuls_mde:
         estimator_names += ["MDE"]
@@ -107,39 +101,30 @@ def _dataframe_results(
 
 
 def plot_simulation_results(
-    full_model_name: str,  # the type of model we are estimating
-    n_households_sim: float,  # the number of households in the simulation
-    n_sim: int,  # the number of simulation runs
-    value_coeff: int,  # the divider of the smallest positive mu
-    do_simuls_mde: bool = True,  # do we simulate MDE
-    do_simuls_poisson: bool = True,  # do we simulate Poisson
-    n_households_popu: float = None,  # the number of households in the Cupid dataset
+    full_model_name: str,
+    n_sim: int,
+    zero_guard: int,
+    do_simuls_mde: bool = True,
+    do_simuls_poisson: bool = True,
 ) -> None:
     """plots the simulation results
 
     Args:
         full_model_name: the type of model we are estimating
-        n_households_sim:  the number of households in the simulation
         n_sim:  the number of simulation runs
-        value_coeff:  the divider of the smallest positive mu
+        zero_guard:  the divider of the smallest positive mu
         do_simuls_mde:  do we simulate the MDE
         do_simuls_poisson:   do we simulate Poisson
-        n_households_popu: the number of households in the Cupid dataset
 
     Returns:
         nothing
     """
-    results_file = (
-        results_dir
-        / f"{full_model_name}_{n_households_sim}_{int(value_coeff)}.pkl"
-    )
+    results_file = results_dir / f"{full_model_name}_{zero_guard}.pkl"
     with open(results_file, "rb") as f:
         results = pickle.load(f)
     true_coeffs = results["True coeffs"]
     n_bases = true_coeffs.size
-    if full_model_name.startswith("choo_siow_cupid"):
-        varcov_coeffs = results["Cupid varcov"]
-        varcov_rescaled = varcov_coeffs * n_households_popu / n_households_sim
+    varcov_coeffs = results["Cupid varcov"]
 
     base_names = results["Base names"]
 
@@ -166,28 +151,20 @@ def plot_simulation_results(
     else:
         print("We have found no outlier samples")
 
-    if full_model_name.startswith("choo_siow_cupid"):
-        rng = np.random.default_rng(67569)
-        n_kept = len(kept)
-        expected = np.zeros((n_kept, n_bases))
-        for i_sim in range(n_kept):
-            expected[i_sim, :] = rng.multivariate_normal(
-                mean=true_coeffs, cov=varcov_rescaled
-            )
-        estims = [expected]
-        if do_simuls_mde:
-            estims.append(estim_mde)
-            if do_simuls_poisson:
-                estims.append(estim_poisson)
-        elif do_simuls_poisson:
+    rng = np.random.default_rng(67569)
+    n_kept = len(kept)
+    expected = np.zeros((n_kept, n_bases))
+    for i_sim in range(n_kept):
+        expected[i_sim, :] = rng.multivariate_normal(
+            mean=true_coeffs, cov=varcov_coeffs
+        )
+    estims = [expected]
+    if do_simuls_mde:
+        estims.append(estim_mde)
+        if do_simuls_poisson:
             estims.append(estim_poisson)
-    else:
-        if do_simuls_mde:
-            estims = estim_mde
-            if do_simuls_poisson:
-                estims.append(estim_poisson)
-        elif do_simuls_poisson:
-            estims = estim_poisson
+    elif do_simuls_poisson:
+        estims.append(estim_poisson)
 
     df_simul_results = _dataframe_results(
         full_model_name,
@@ -206,13 +183,9 @@ def plot_simulation_results(
         col_wrap=2,
     )
     g.map(sns.kdeplot, "Estimate")
-    #     g.set_xlim([-1.0, 3.0])
     g.set_titles("{col_name}")
     for true_val, ax in zip(true_coeffs, g.axes.ravel()):
         ax.vlines(true_val, *ax.get_ylim(), color="k", linestyles="dashed")
     g.add_legend()
 
-    plt.savefig(
-        results_dir
-        / f"{full_model_name}_simul_{n_households_sim}_{int(value_coeff)}.png"
-    )
+    plt.savefig(results_dir / f"{full_model_name}.png")

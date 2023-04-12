@@ -47,6 +47,7 @@ nav:
   - API Reference:
       - General Utilities: utils.md
       - Configuration: config.md
-      - Specification: specification.md
+      - Creating the samples: create_two_samples.md
       - Reading the Data: read_data.md
+      - Specification: specification.md
       - Generating Plots: plots.md
