@@ -1,10 +1,12 @@
 import dataclasses as dc
 import pickle
+import multiprocessing as mp
 from multiprocessing.pool import ThreadPool as Pool
 from typing import Tuple, List
 import time
 
 import numpy as np
+from cupid_matching.entropy import EntropyFunctions
 from cupid_matching.choo_siow import (
     entropy_choo_siow,
     entropy_choo_siow_corrected,
@@ -124,7 +126,10 @@ def name_and_pickle_primitives(
 
 
 def estimate_choosiow(
-    full_model_name: str, mus: Matching, base_functions: np.ndarray
+    full_model_name: str,
+    entropy: EntropyFunctions,
+    mus: Matching,
+    base_functions: np.ndarray,
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """estimates Choo and Siow on the population data
 
@@ -138,9 +143,7 @@ def estimate_choosiow(
         their estimated standard errors, and the estimated joint surplus
     """
     if do_simuls_mde:
-        mde_results = estimate_semilinear_mde(
-            mus, base_functions, entropy_choo_siow
-        )
+        mde_results = estimate_semilinear_mde(mus, base_functions, entropy)
         estim_Phi = mde_results.estimated_Phi
         estim_coeffs = mde_results.estimated_coefficients
         varcov_coeffs = mde_results.varcov_coefficients
@@ -207,12 +210,17 @@ if __name__ == "__main__":
     base_functions, base_names = make_bases(nx, my, degrees)
     n_bases = len(base_names)
     full_model_name = name_and_pickle_primitives(mus, varmus, base_functions)
+    entropy = (
+        entropy_choo_siow_corrected
+        if use_mde_correction
+        else entropy_choo_siow
+    )
     (
         estim_coeffs,
         varcov_coeffs,
         std_coeffs,
         estim_Phi,
-    ) = estimate_choosiow(full_model_name, mus, base_functions)
+    ) = estimate_choosiow(full_model_name, entropy, mus, base_functions)
 
     # we use the Phi and the margins we got from the Cupid dataset
     choo_siow_true = ChooSiowPrimitives(estim_Phi, nx, my)
@@ -222,19 +230,12 @@ if __name__ == "__main__":
     seeds = rng.integers(100_000, size=n_sim)
     verbose = 0
 
-    entropy = (
-        entropy_choo_siow_corrected
-        if use_mde_correction
-        else entropy_choo_siow
-    )
-
     # run simulation
     list_args = [
         [
             i_sim,
             seeds[i_sim],
             choo_siow_true,
-            sample_size,
             n_households_obs,
             base_functions,
             entropy,
@@ -245,7 +246,7 @@ if __name__ == "__main__":
         ]
         for i_sim in range(n_sim)
     ]
-    nb_cpus = 5
+    nb_cpus = mp.cpu_count() - 2
     start_simuls = time.time()
     with Pool(nb_cpus) as pool:
         results = pool.starmap(_run_simul, list_args)
@@ -313,5 +314,5 @@ if __name__ == "__main__":
         f"Numbers of marriages: {np.sum(mus.muxy)} and {np.sum(mus_sim.muxy)}"
     )
     print(
-        f"\n\n**** {n_sim} simulations took {end_simuls - start_simuls: >10.3f} seconds****"
+        f"\n\n**** {n_sim} simulations took {end_simuls - start_simuls: >10.3f} seconds on {nb_cpus} CPUs****"
     )

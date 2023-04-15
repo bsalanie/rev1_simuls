@@ -1,6 +1,7 @@
 """ configuration for the simulations"""
 
 from pathlib import Path
+from multiprocessing import Value
 
 dropbox_home = Path.home() / "Dropbox"
 cupid_pub_dir = dropbox_home / "GalichonSalanie" / "Cupid" / "RestudPubli"
@@ -29,12 +30,19 @@ shrink_factor = (
 n_households_cupid_popu = (
     13_274_041  # number of households in the Cupid population
 )
-use_mde_correction = False  # use the `corrected` version of MDE
+use_mde_correction = True  # use the `corrected` version of MDE
 
 renormalize_true_coeffs = True  # make all true coeffs equal 1
 
 n_sim = 10  # number of simulations
+
+
 #  if zero_guard is not 0,
 #     we set the zero cells at the size of the smallest positive cell
 #      divided by zero_guard.
 zero_guard = 1
+
+if use_mde_correction:
+    zero_guard = 0
+
+n_simulations_done = Value("i", 0)

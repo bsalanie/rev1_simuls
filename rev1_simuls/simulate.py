@@ -2,12 +2,14 @@
 from typing import Tuple
 import numpy as np
 
+
 from cupid_matching.entropy import EntropyFunctions
 from cupid_matching.min_distance_utils import MDEResults
 from cupid_matching.poisson_glm_utils import PoissonGLMResults
 from cupid_matching.model_classes import ChooSiowPrimitives
 from cupid_matching.min_distance import estimate_semilinear_mde
 from cupid_matching.poisson_glm import choo_siow_poisson_glm
+from rev1_simuls.config import n_simulations_done
 from rev1_simuls.read_data import remove_zero_cells
 
 
@@ -15,7 +17,6 @@ def _run_simul(
     i_sim: int,
     seed: int,
     choo_siow_true: ChooSiowPrimitives,
-    sample_size: str,
     n_households_obs: int,
     base_functions: np.ndarray,
     entropy: EntropyFunctions,
@@ -30,7 +31,6 @@ def _run_simul(
         i_sim: the index of the simulation
         seed: the seed for its random draws
         choo_siow_true: the DGP we simulate from
-        sample_size: "large" or "small"
         n_households_obs: the number of households
         base_functions:  the bases
         entropy:  the entropy
@@ -68,6 +68,11 @@ def _run_simul(
             print(f"    Done Poisson {i_sim}")
     if verbose >= 1:
         print(f"        Done simul {i_sim}")
+
+    with n_simulations_done.get_lock():
+        n_simulations_done.value += 1
+    print(f"       Did {n_simulations_done.value} simulations")
+
     if do_both:
         return estim_coeffs_mde, estim_coeffs_poisson
     elif do_simuls_mde:
