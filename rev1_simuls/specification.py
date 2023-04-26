@@ -1,12 +1,9 @@
 from typing import List, Tuple
 
 import numpy as np
-
 from cupid_matching.utils import nprepeat_col, nprepeat_row
-from rev1_simuls.utils import (
-    legendre_polynomials,
-    quantile_transform,
-)
+
+from rev1_simuls.utils import legendre_polynomials, quantile_transform
 
 
 def monomial_name(var: str, deg: int) -> str:
@@ -111,4 +108,25 @@ def _generate_bases_firstsub(
             base_functions[i, j, 6] = 1
             base_functions[i, j, 7] = i - j
     base_names = ["1", "x", "y", "x^2", "xy", "y^2", "1(x>y)", "max(x-y,0)"]
+    return base_functions, base_names
+
+
+def make_bases_cupid(
+    nx: np.ndarray, my: np.ndarray, degrees: List[Tuple[int, int]]
+) -> Tuple[np.ndarray, List[str]]:
+    """create base functions
+
+    Args:
+        nx: numbers of men of each type
+        my: numbers of women of each type
+        degrees: degrees of the bivariate polynomials
+
+    Returns:
+        the values of the base functions and their names
+    """
+    base_functions, base_names = generate_bases(nx, my, degrees)
+    n_bases = base_functions.shape[-1]
+    print(f"We created {n_bases} bases:")
+    for i_base, base_name in enumerate(base_names):
+        print(f"{i_base+1}: {base_name}")
     return base_functions, base_names

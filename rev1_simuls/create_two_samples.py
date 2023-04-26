@@ -1,11 +1,12 @@
-import numpy as np
-import pandas as pd
+import pickle
 from pathlib import Path
 from typing import List, Tuple
-import pickle
 
-from rev1_simuls.utils import bs_error_abort, VarianceMatching
+import numpy as np
+import pandas as pd
+
 from rev1_simuls.config import intermediate_data_dir, output_data_dir
+from rev1_simuls.utils import VarianceMatching, bs_error_abort
 
 
 def make_marriages(

@@ -1,11 +1,13 @@
+import pickle
 from pathlib import Path
 from typing import Optional, Tuple
-import pickle
 
 import numpy as np
-from cupid_matching.matching_utils import Matching, _compute_margins
+from cupid_matching.matching_utils import Matching,  \
+    _compute_margins
 
-from rev1_simuls.utils import VarianceMatching
+from rev1_simuls.utils import VarianceMatching, data_dir, print_quantiles
+from rev1_simuls.config import age_start, age_end, zero_guard 
 
 
 def ages_slice(
@@ -222,3 +224,28 @@ def remove_zero_cells(
         )
         mus_fixed = Matching(muxy_fixed, nx_fixed, my_fixed)
         return mus_fixed
+
+
+def prepare_data_cupid(sample_size: str):
+    nx, my = read_margins(
+        data_dir, sample_size, age_start=age_start, age_end=age_end
+    )
+    muxy, varmus = read_marriages(
+        data_dir, sample_size, age_start=age_start, age_end=age_end
+    )
+    n_types_men, n_types_women = muxy.shape
+    print(
+        f"""
+    \nThe data has {n_types_men: d} types of men and {n_types_women: d} types of women.
+    """
+    )
+    mus = Matching(muxy, nx, my)
+    mus_non_zero = remove_zero_cells(mus, coeff=zero_guard)
+
+    quantiles = np.arange(1, 20) / 100.0
+    print("  Some quantiles of raw and fixed muxy:")
+    print_quantiles(
+        [mus.muxy.flatten(), mus_non_zero.muxy.flatten()], quantiles
+    )
+    return mus_non_zero, varmus
+

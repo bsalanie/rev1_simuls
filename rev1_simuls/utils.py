@@ -1,6 +1,7 @@
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Iterable
 
 import numpy as np
 from cupid_matching.utils import bs_error_abort, test_matrix, test_vector
@@ -116,13 +117,13 @@ def quantile_transform(v: np.ndarray) -> np.ndarray:
 
 
 def print_quantiles(
-    v: np.ndarray | list[np.ndarray], quantiles: np.ndarray
+    v: np.ndarray | Iterable[np.ndarray], quantiles: np.ndarray
 ) -> np.ndarray:
     """print these quantiles of the array(s)
 
     Args:
-        v:  a vector or a list of vectors
-        quantiles: the quantiles in [0,1]
+        v:  a vector or an iterable of vectors
+        quantiles: quantiles in [0,1]
 
     Returns:
          the corresponding quantiles as a vector or a matrix
@@ -132,7 +133,7 @@ def print_quantiles(
         qvals = np.quantile(v, quantiles)
         for q, qv in zip(quantiles, qvals):
             print(f"Quantile {q: .3f}: {qv: >10.3f}")
-    elif isinstance(v, list):
+    elif isinstance(v, Iterable):
         for v_i in v:
             _ = test_vector(v_i)
         nv = len(v)

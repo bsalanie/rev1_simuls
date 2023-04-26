@@ -1,95 +1,30 @@
 import dataclasses as dc
-import pickle
 import multiprocessing as mp
-from multiprocessing.pool import ThreadPool as Pool
-from typing import Tuple, List
+import pickle
 import time
+from multiprocessing.pool import ThreadPool as Pool
+from typing import List, Tuple
 
 import numpy as np
+from cupid_matching.choo_siow import (entropy_choo_siow,
+                                      entropy_choo_siow_corrected)
 from cupid_matching.entropy import EntropyFunctions
-from cupid_matching.choo_siow import (
-    entropy_choo_siow,
-    entropy_choo_siow_corrected,
-)
 from cupid_matching.matching_utils import Matching
 from cupid_matching.min_distance import estimate_semilinear_mde
 from cupid_matching.model_classes import ChooSiowPrimitives
 from cupid_matching.poisson_glm import choo_siow_poisson_glm
 
-from rev1_simuls.simulate import _run_simul
+from rev1_simuls.config import (age_end, age_start, degrees, do_simuls_mde,
+                                do_simuls_poisson, model_name, n_sim,
+                                plot_simuls, renormalize_true_coeffs,
+                                sample_size, shrink_factor, use_mde_correction,
+                                zero_guard)
 from rev1_simuls.plots import plot_simulation_results
-from rev1_simuls.read_data import (
-    read_margins,
-    read_marriages,
-    remove_zero_cells,
-)
-from rev1_simuls.specification import generate_bases
-from rev1_simuls.utils import (
-    data_dir,
-    results_dir,
-    print_quantiles,
-    VarianceMatching,
-)
-from rev1_simuls.config import (
-    age_start,
-    age_end,
-    do_simuls_mde,
-    do_simuls_poisson,
-    n_sim,
-    zero_guard,
-    model_name,
-    shrink_factor,
-    use_mde_correction,
-    renormalize_true_coeffs,
-    degrees,
-    plot_simuls,
-    sample_size,
-)
-
-
-def prepare_data_cupid(sample_size: str):
-    nx, my = read_margins(
-        data_dir, sample_size, age_start=age_start, age_end=age_end
-    )
-    muxy, varmus = read_marriages(
-        data_dir, sample_size, age_start=age_start, age_end=age_end
-    )
-    n_types_men, n_types_women = muxy.shape
-    print(
-        f"""
-    \nThe data has {n_types_men} types of men and {n_types_women} types of women.
-    """
-    )
-    mus = Matching(muxy, nx, my)
-    mus_non_zero = remove_zero_cells(mus, coeff=zero_guard)
-
-    quantiles = np.arange(1, 10) / 100.0
-    print("   quantiles of raw and fixed muxy:")
-    print_quantiles(
-        [mus.muxy.flatten(), mus_non_zero.muxy.flatten()], quantiles
-    )
-    return mus_non_zero, varmus
-
-
-def make_bases(
-    nx: np.ndarray, my: np.ndarray, degrees: List[Tuple[int, int]]
-) -> Tuple[np.ndarray, List[str]]:
-    """create base functions
-
-    Args:
-        nx: numbers of men of each type
-        my: numbers of women of each type
-        degrees: degrees of the bivariate polynomials
-
-    Returns:
-        the values of the base functions and their names
-    """
-    base_functions, base_names = generate_bases(nx, my, degrees)
-    n_bases = base_functions.shape[-1]
-    print(f"We created {n_bases} bases:")
-    for i_base, base_name in enumerate(base_names):
-        print(f"{i_base+1}: {base_name}")
-    return base_functions, base_names
+from rev1_simuls.read_data import prepare_data_cupid
+from rev1_simuls.simulate import _run_simul
+from rev1_simuls.specification import make_bases_cupid
+from rev1_simuls.utils import (VarianceMatching, data_dir, print_quantiles,
+                               results_dir)
 
 
 def name_and_pickle_primitives(
@@ -125,13 +60,13 @@ def name_and_pickle_primitives(
     return full_model_name
 
 
-def estimate_choosiow(
+def estimate_original(
     full_model_name: str,
     entropy: EntropyFunctions,
     mus: Matching,
     base_functions: np.ndarray,
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    """estimates Choo and Siow on the population data
+    """estimates Choo and Siow on the original data
 
     Args:
         full_model_name: the qualified name
@@ -139,7 +74,7 @@ def estimate_choosiow(
         base_functions: the values of the base functions
 
     Returns:
-        the estimated coefficients, theri estimated variance,
+        the estimated coefficients, their estimated variance,
         their estimated standard errors, and the estimated joint surplus
     """
     if do_simuls_mde:
@@ -207,7 +142,7 @@ if __name__ == "__main__":
     mus, varmus = prepare_data_cupid(sample_size)
     muxy, mux0, mu0y, nx, my = mus.unpack()
     n_households_obs = np.sum(nx) + np.sum(my) - np.sum(muxy)
-    base_functions, base_names = make_bases(nx, my, degrees)
+    base_functions, base_names = make_bases_cupid(nx, my, degrees)
     n_bases = len(base_names)
     full_model_name = name_and_pickle_primitives(mus, varmus, base_functions)
     entropy = (
@@ -220,10 +155,13 @@ if __name__ == "__main__":
         varcov_coeffs,
         std_coeffs,
         estim_Phi,
-    ) = estimate_choosiow(full_model_name, entropy, mus, base_functions)
+    ) = estimate_original(full_model_name, entropy, mus, base_functions)
 
     # we use the Phi and the margins we got from the Cupid dataset
     choo_siow_true = ChooSiowPrimitives(estim_Phi, nx, my)
+
+    with open(data_dir / f"{full_model_name}_phi_true.pkl", "wb") as f:
+        pickle.dump(estim_Phi, f)
 
     # generate random seeds
     rng = np.random.default_rng(130962)
@@ -257,8 +195,8 @@ if __name__ == "__main__":
         estim_coeffs_mde = np.zeros((n_sim, n_bases))
         estim_coeffs_poisson = np.zeros((n_sim, n_bases))
         for i_sim in range(n_sim):
-            estim_coeffs_mde[i_sim, :] = results[i_sim][0]
-            estim_coeffs_poisson[i_sim, :] = results[i_sim][1]
+            estim_coeffs_mde[i_sim, :] = results[i_sim][0][0]
+            estim_coeffs_poisson[i_sim, :] = results[i_sim][0][1]
         simul_results = {
             "Base names": base_names,
             "Base functions": base_functions,
@@ -269,7 +207,7 @@ if __name__ == "__main__":
     elif do_simuls_mde:
         estim_coeffs_mde = np.zeros((n_sim, n_bases))
         for i_sim in range(n_sim):
-            estim_coeffs_mde[i_sim, :] = results[i_sim]
+            estim_coeffs_mde[i_sim, :] = results[i_sim][0]
         simul_results = {
             "Base names": base_names,
             "Base functions": base_functions,
@@ -279,7 +217,7 @@ if __name__ == "__main__":
     elif do_simuls_poisson:
         estim_coeffs_poisson = np.zeros((n_sim, n_bases))
         for i_sim in range(n_sim):
-            estim_coeffs_poisson[i_sim, :] = results[i_sim]
+            estim_coeffs_poisson[i_sim, :] = results[i_sim][0]
         simul_results = {
             "Base names": base_names,
             "Base functions": base_functions,
@@ -288,6 +226,10 @@ if __name__ == "__main__":
         }
     simul_results["Cupid stderrs"] = std_coeffs
     simul_results["Cupid varcov"] = varcov_coeffs
+    phi_nonparam = np.zeros((n_sim, nx.size, my.size))
+    for isim in range(n_sim):
+        phi_nonparam[isim, :, :] = results[isim][1]
+    simul_results["Phi non param"] = phi_nonparam
 
     # and save them
     with open(
